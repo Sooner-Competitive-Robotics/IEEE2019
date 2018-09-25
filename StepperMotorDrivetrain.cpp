@@ -1,7 +1,9 @@
 #include "StepperMotorDrivetrain.h"
 
+//constructor
 StepperMotorDrivetrain::StepperMotorDrivetrain()
 {
+	//sets steps and step counter to 0
 	this->leftSteps = 0;
 	this->leftCounter = 0;
 	
@@ -12,8 +14,10 @@ StepperMotorDrivetrain::StepperMotorDrivetrain()
 	this->rpm = 25;
 }
 
+//operator overload?
 void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 {
+	//sets private variables from each drivetrain equal to one other
 	this->leftIN1 = drivetrain.leftIN1;
 	this->leftIN2 = drivetrain.leftIN2;
 	this->leftIN3 = drivetrain.leftIN3;
@@ -33,7 +37,7 @@ void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 	this->rightCounter = drivetrain.rightCounter;
 }
 
-
+//sets pins for left motors
 void StepperMotorDrivetrain::initLeft(int in1, int in2, int in3, int in4)
 {
 	this->leftIN1 = in1;
@@ -47,6 +51,7 @@ void StepperMotorDrivetrain::initLeft(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
+//sets pins for right motors
 void StepperMotorDrivetrain::initRight(int in1, int in2, int in3, int in4)
 {
 	this->rightIN1 = in1;
@@ -60,11 +65,13 @@ void StepperMotorDrivetrain::initRight(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
+//sets speed of drivetrain
 void StepperMotorDrivetrain::setRPM(float speed)
 {
 	this->rpm = abs(speed);
 }
 
+//moves the drivetrain
 void StepperMotorDrivetrain::step(int left, int right)
 {
 	bool millisecond_interval = false;
@@ -116,27 +123,32 @@ void StepperMotorDrivetrain::step(int left, int right)
 	}
 }
 
+//resets the step counters to 0
 void StepperMotorDrivetrain::resetStepCounter()
 {
 	leftSteps = 0;
 	rightSteps = 0;
 }
 
+//getter method for left motor steps
 long StepperMotorDrivetrain::getLeftSteps()
 {
 	return this->leftSteps;
 }
 
+//getter method for right motor steps
 long StepperMotorDrivetrain::getRightSteps()
 {
 	return this->rightSteps;
 }
 
+//helper method to convert inches to steps
 int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 {
 	//number of steps / circumference of wheel = ratio
 	return static_cast<int>((STEPS_PER_REVOLUTION/(2.875*3.141592653589))*inches);
 }
+
 //Private Functions
 
 void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
