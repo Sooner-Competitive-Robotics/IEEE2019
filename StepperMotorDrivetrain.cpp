@@ -158,6 +158,7 @@ void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
     delay(stepWait); // Wait
 }
 
+//same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
 {
 	sendStepSignalToLeft(leftCounter % 4);
