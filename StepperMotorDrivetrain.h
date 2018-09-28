@@ -2,11 +2,13 @@
 #define STEPPERMOTORDRIVETRAIN_H
 
 #include <Arduino.h>
+#include <String.h>
 
 #define STEPS_PER_REVOLUTION 200
 
 /*
  * (Taken from Arduino Stepper.h)
+ * Run through sequence to make a step
  * The sequence of control signals for 4 control wires is as follows:
  *
  * Step C0 C1 C2 C3
@@ -28,36 +30,51 @@ class StepperMotorDrivetrain
 		
 		void step(int left, int right);
 		
+		void strafe(string direction, unsigned int steps);
+		
 		void setRPM(float speed);
 		void resetStepCounter();
 		
-		long getLeftSteps();
-		long getRightSteps();
+		long getFrontLeftSteps();
+		long getBackLeftSteps();
+		long getFrontRightSteps();
+		long getBackRightSteps();
 		
 		int convertInchesToSteps(float inches);
 		
 	private:
-		//Left Motor
-		int leftIN1, leftIN2, leftIN3, leftIN4;
+		//Front left Motor
+		int fLeftIN1, fLeftIN2, fleftIN3, fleftIN4;
 		
-		//Right Motor
-		int rightIN1, rightIN2, rightIN3, rightIN4;
+		//Back left Motor 2
+		int bLeftIN1, bLeftIN2, bLeftIN3, bLeftIN4;
 		
-		//RPM of both motors
+		//Front right Motor
+		int fRightIN1, fRightIN2, fRightIN3, fRightIN4;
+		
+		//Back right Motor
+		int bRight2IN1, bRight2IN2, bRight2IN3, bRight2IN4;
+		
+		//RPM of all drive motors
 		float rpm;
 		
 		//Step counters
-		long leftSteps;
-		long rightSteps;
+		long frontLeftSteps;
+		long backLeftSteps;
+		long frontRightSteps;
+		long backRightSteps;
 		
-		int leftCounter, rightCounter;
+		int frontLeftCounter, frontRightCounter, backLeftCounter, backRightCounter;
 		
 		//Stepping functions
 		void singleStep(unsigned int stepWait);
 		void singleStep_us(unsigned int stepWait);
 		
-		void sendStepSignalToLeft(int stepID);
-		void sendStepSignalToRight(int stepID);
+		void sendStepSignalToFrontLeft(int stepID);
+		void sendStepSignalToBackLeft(int stepID);
+		void sendStepSignalToFrontRight(int stepID);
+		void sendStepSignalToBackRight(int stepID);
+
 };
 
 #endif

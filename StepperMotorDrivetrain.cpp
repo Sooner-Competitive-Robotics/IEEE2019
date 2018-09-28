@@ -1,14 +1,21 @@
 #include "StepperMotorDrivetrain.h"
+#include <String.h>
 
 //constructor
 StepperMotorDrivetrain::StepperMotorDrivetrain()
 {
 	//sets steps and step counter to 0
-	this->leftSteps = 0;
-	this->leftCounter = 0;
+	this->frontLeftSteps = 0;
+	this->frontLeftCounter = 0;
 	
-	this->rightSteps = 0;
-	this->rightCounter = 0;
+	this->backLeftSteps = 0;
+	this->backLeftCounter = 0;
+	
+	this->frontRightSteps = 0;
+	this->frontRightCounter = 0;
+	
+	this->backRightSteps = 0;
+	this->backRightCounter = 0;
 	
 	//Set this to a medium speed
 	this->rpm = 25;
@@ -18,32 +25,46 @@ StepperMotorDrivetrain::StepperMotorDrivetrain()
 void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 {
 	//sets private variables from each drivetrain equal to one other
-	this->leftIN1 = drivetrain.leftIN1;
-	this->leftIN2 = drivetrain.leftIN2;
-	this->leftIN3 = drivetrain.leftIN3;
-	this->leftIN4 = drivetrain.leftIN4;
+	this->fLeftIN1 = drivetrain.fLeftIN1;
+	this->fLeftIN2 = drivetrain.fLeftIN2;
+	this->fLeftIN3 = drivetrain.fLeftIN3;
+	this->fLeftIN4 = drivetrain.fLeftIN4;
 	
-	this->rightIN1 = drivetrain.rightIN1;
-	this->rightIN2 = drivetrain.rightIN2;
-	this->rightIN3 = drivetrain.rightIN3;
-	this->rightIN4 = drivetrain.rightIN4;
+	this->bLeftIN1 = drivetrain.bLeftIN1;
+	this->bLeftIN2 = drivetrain.bLeftIN2;
+	this->bLeftIN3 = drivetrain.bLeftIN3;
+	this->bLeftIN4 = drivetrain.bLeftIN4;
+	
+	this->fRightIN1 = drivetrain.fRightIN1;
+	this->fRightIN2 = drivetrain.fRightIN2;
+	this->fRightIN3 = drivetrain.fRightIN3;
+	this->fRightIN4 = drivetrain.fRightIN4;
+	
+	this->bRightIN1 = drivetrain.bRightIN1;
+	this->bRightIN2 = drivetrain.bRightIN2;
+	this->bRightIN3 = drivetrain.bRightIN3;
+	this->bRightIN4 = drivetrain.bRightIN4;
 	
 	this->rpm = drivetrain.rpm;
 	
-	this->leftSteps = drivetrain.leftSteps;
-	this->rightSteps = drivetrain.rightSteps;
-	
-	this->leftCounter = drivetrain.leftCounter;
-	this->rightCounter = drivetrain.rightCounter;
+	this->frontLeftSteps = drivetrain.frontLeftSteps;
+	this->backLeftSteps = drivetrain.backLeftSteps;
+	this->frontRightSteps = drivetrain.frontRightSteps;
+	this->backRightSteps = drivetrain.backRightSteps;
+
+	this->frontLeftCounter = drivetrain.frontLeftCounter;
+	this->backLeftCounter = drivetrain.backLeftCounter;
+	this->frontRightCounter = drivetrain.frontRightCounter;
+	this->backRightCounter = drivetrain.backRightCounter;
 }
 
-//sets pins for left motors
-void StepperMotorDrivetrain::initLeft(int in1, int in2, int in3, int in4)
+//sets pins for front left motors
+void StepperMotorDrivetrain::initFrontLeft(int in1, int in2, int in3, int in4)
 {
-	this->leftIN1 = in1;
-	this->leftIN2 = in2;
-	this->leftIN3 = in3;
-	this->leftIN4 = in4;
+	this->fLeftIN1 = in1;
+	this->fLeftIN2 = in2;
+	this->fLeftIN3 = in3;
+	this->fLeftIN4 = in4;
 	
 	pinMode(in1, OUTPUT);
 	pinMode(in2, OUTPUT);
@@ -51,13 +72,41 @@ void StepperMotorDrivetrain::initLeft(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
-//sets pins for right motors
+//sets pins for back left motors
+void StepperMotorDrivetrain::initBackLeft(int in1, int in2, int in3, int in4)
+{
+	this->bLeftIN1 = in1;
+	this->bLeftIN2 = in2;
+	this->bLeftIN3 = in3;
+	this->bLeftIN4 = in4;
+	
+	pinMode(in1, OUTPUT);
+	pinMode(in2, OUTPUT);
+	pinMode(in3, OUTPUT);
+	pinMode(in4, OUTPUT);
+}
+
+//sets pins for front right motors
+void StepperMotorDrivetrain::initFrontRight(int in1, int in2, int in3, int in4)
+{
+	this->fRightIN1 = in1;
+	this->fRightIN2 = in2;
+	this->fRightIN3 = in3;
+	this->fRightIN4 = in4;
+	
+	pinMode(in1, OUTPUT);
+	pinMode(in2, OUTPUT);
+	pinMode(in3, OUTPUT);
+	pinMode(in4, OUTPUT);
+}
+
+//sets pins for back right motors
 void StepperMotorDrivetrain::initRight(int in1, int in2, int in3, int in4)
 {
-	this->rightIN1 = in1;
-	this->rightIN2 = in2;
-	this->rightIN3 = in3;
-	this->rightIN4 = in4;
+	this->bRightIN1 = in1;
+	this->bRightIN2 = in2;
+	this->bRightIN3 = in3;
+	this->bRightIN4 = in4;
 	
 	pinMode(in1, OUTPUT);
 	pinMode(in2, OUTPUT);
@@ -131,15 +180,27 @@ void StepperMotorDrivetrain::resetStepCounter()
 }
 
 //getter method for left motor steps
-long StepperMotorDrivetrain::getLeftSteps()
+long StepperMotorDrivetrain::getFrontLeftSteps()
 {
-	return this->leftSteps;
+	return this->frontLeftSteps;
+}
+
+//getter method for left motor steps
+long StepperMotorDrivetrain::getBackLeftSteps()
+{
+	return this->backLeftSteps;
 }
 
 //getter method for right motor steps
-long StepperMotorDrivetrain::getRightSteps()
+long StepperMotorDrivetrain::getFrontRightSteps()
 {
-	return this->rightSteps;
+	return this->frontRightSteps;
+}
+
+//getter method for right motor steps
+long StepperMotorDrivetrain::getBackRightSteps()
+{
+	return this->backRightSteps;
 }
 
 //helper method to convert inches to steps
@@ -161,67 +222,127 @@ void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
 //same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
 {
-	sendStepSignalToLeft(leftCounter % 4);
+	sendStepSignalToFrontLeft(leftCounter % 4);
 	sendStepSignalToRight(rightCounter % 4);
     delayMicroseconds(stepWait); // Wait
 }
 
-void StepperMotorDrivetrain::sendStepSignalToLeft(int stepID)
+void StepperMotorDrivetrain::sendStepSignalToFrontLeft(int stepID)
 {
 	switch (stepID) {
 		case 0:  // 1010
-			digitalWrite(leftIN1, HIGH);
-			digitalWrite(leftIN2, LOW);
-			digitalWrite(leftIN3, HIGH);
-			digitalWrite(leftIN4, LOW);
+			digitalWrite(fLeftIN1, HIGH);
+			digitalWrite(fLeftIN2, LOW);
+			digitalWrite(fLeftIN3, HIGH);
+			digitalWrite(fLeftIN4, LOW);
 			break;
 		case 1:  // 0110
-			digitalWrite(leftIN1, LOW);
-			digitalWrite(leftIN2, HIGH);
-			digitalWrite(leftIN3, HIGH);
-			digitalWrite(leftIN4, LOW);
+			digitalWrite(fLeftIN1, LOW);
+			digitalWrite(fLeftIN2, HIGH);
+			digitalWrite(fLeftIN3, HIGH);
+			digitalWrite(fLeftIN4, LOW);
 			break;
 		case 2:  //0101
-			digitalWrite(leftIN1, LOW);
-			digitalWrite(leftIN2, HIGH);
-			digitalWrite(leftIN3, LOW);
-			digitalWrite(leftIN4, HIGH);
+			digitalWrite(fLeftIN1, LOW);
+			digitalWrite(fLeftIN2, HIGH);
+			digitalWrite(fLeftIN3, LOW);
+			digitalWrite(fLeftIN4, HIGH);
 			break;
 		case 3:  //1001
-			digitalWrite(leftIN1, HIGH);
-			digitalWrite(leftIN2, LOW);
-			digitalWrite(leftIN3, LOW);
-			digitalWrite(leftIN4, HIGH);
+			digitalWrite(fLeftIN1, HIGH);
+			digitalWrite(fLeftIN2, LOW);
+			digitalWrite(fLeftIN3, LOW);
+			digitalWrite(fLeftIN4, HIGH);
 			break;
     }
 }
 
-void StepperMotorDrivetrain::sendStepSignalToRight(int stepID)
+void StepperMotorDrivetrain::sendStepSignalToBackLeft(int stepID)
 {
 	switch (stepID) {
 		case 0:  // 1010
-			digitalWrite(rightIN1, HIGH);
-			digitalWrite(rightIN2, LOW);
-			digitalWrite(rightIN3, HIGH);
-			digitalWrite(rightIN4, LOW);
+			digitalWrite(bLeftIN1, HIGH);
+			digitalWrite(bLeftIN2, LOW);
+			digitalWrite(bLeftIN3, HIGH);
+			digitalWrite(bLeftIN4, LOW);
 			break;
 		case 1:  // 0110
-			digitalWrite(rightIN1, LOW);
-			digitalWrite(rightIN2, HIGH);
-			digitalWrite(rightIN3, HIGH);
+			digitalWrite(bLeftIN1, LOW);
+			digitalWrite(bLeftIN2, HIGH);
+			digitalWrite(bLeftIN3, HIGH);
+			digitalWrite(bLeftIN4, LOW);
+			break;
+		case 2:  //0101
+			digitalWrite(bLeftIN1, LOW);
+			digitalWrite(bLeftIN2, HIGH);
+			digitalWrite(bLeftIN3, LOW);
+			digitalWrite(bLeftIN4, HIGH);
+			break;
+		case 3:  //1001
+			digitalWrite(bLeftIN1, HIGH);
+			digitalWrite(bLeftIN2, LOW);
+			digitalWrite(bLeftIN3, LOW);
+			digitalWrite(bLeftIN4, HIGH);
+			break;
+    }
+}
+
+void StepperMotorDrivetrain::sendStepSignalToFrontRight(int stepID)
+{
+	switch (stepID) {
+		case 0:  // 1010
+			digitalWrite(fRightIN1, HIGH);
+			digitalWrite(fRightIN2, LOW);
+			digitalWrite(fRightIN3, HIGH);
+			digitalWrite(fRightIN4, LOW);
+			break;
+		case 1:  // 0110
+			digitalWrite(fRightIN1, LOW);
+			digitalWrite(fRightIN2, HIGH);
+			digitalWrite(fRightIN3, HIGH);
+			digitalWrite(fRightIN4, LOW);
+			break;
+		case 2:  //0101
+			digitalWrite(fRightIN1, LOW);
+			digitalWrite(fRightIN2, HIGH);
+			digitalWrite(fRightIN3, LOW);
+			digitalWrite(fRightIN4, HIGH);
+			break;
+		case 3:  //1001
+			digitalWrite(fRightIN1, HIGH);
+			digitalWrite(fRightIN2, LOW);
+			digitalWrite(fRightIN3, LOW);
+			digitalWrite(fRightIN4, HIGH);
+			break;
+    }
+}
+
+void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
+{
+	switch (stepID) {
+		case 0:  // 1010
+			digitalWrite(bRightIN1, HIGH);
+			digitalWrite(bRightIN2, LOW);
+			digitalWrite(bRightIN3, HIGH);
+			digitalWrite(bRightIN4, LOW);
+			break;
+		case 1:  // 0110
+			digitalWrite(bRightIN1, LOW);
+			digitalWrite(bRightIN2, HIGH);
+			digitalWrite(bRightIN3, HIGH);
 			digitalWrite(rightIN4, LOW);
 			break;
 		case 2:  //0101
-			digitalWrite(rightIN1, LOW);
-			digitalWrite(rightIN2, HIGH);
-			digitalWrite(rightIN3, LOW);
-			digitalWrite(rightIN4, HIGH);
+			digitalWrite(bRightIN1, LOW);
+			digitalWrite(bRightIN2, HIGH);
+			digitalWrite(bRightIN3, LOW);
+			digitalWrite(bRightIN4, HIGH);
 			break;
 		case 3:  //1001
-			digitalWrite(rightIN1, HIGH);
-			digitalWrite(rightIN2, LOW);
-			digitalWrite(rightIN3, LOW);
-			digitalWrite(rightIN4, HIGH);
+			digitalWrite(bRightIN1, HIGH);
+			digitalWrite(bRightIN2, LOW);
+			digitalWrite(bRightIN3, LOW);
+			digitalWrite(bRightIN4, HIGH);
 			break;
     }
 }
