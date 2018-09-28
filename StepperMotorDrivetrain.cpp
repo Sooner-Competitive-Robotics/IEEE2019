@@ -121,6 +121,7 @@ void StepperMotorDrivetrain::setRPM(float speed)
 }
 
 //moves the drivetrain
+//TODO: change step to accommodate 4 motors. Make the front and back motors the same values.
 void StepperMotorDrivetrain::step(int left, int right)
 {
 	bool millisecond_interval = false;
@@ -214,16 +215,20 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 
 void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
 {
-	sendStepSignalToLeft(leftCounter % 4);
-	sendStepSignalToRight(rightCounter % 4);
+	sendStepSignalToFrontLeft(frontLeftCounter % 4);
+	sendStepSignalToFrontRight(frontRightCounter % 4);
+	sendStepSignalToBackLeft(backLeftCounter % 4);
+	sendStepSignalToBackRight(backRightCounter % 4);
     delay(stepWait); // Wait
 }
 
 //same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
 {
-	sendStepSignalToFrontLeft(leftCounter % 4);
-	sendStepSignalToRight(rightCounter % 4);
+	sendStepSignalToFrontLeft(frontLeftCounter % 4);
+	sendStepSignalToFrontRight(frontRightCounter % 4);
+	sendStepSignalToBackLeft(backLeftCounter % 4);
+	sendStepSignalToBackRight(backRightCounter % 4);
     delayMicroseconds(stepWait); // Wait
 }
 
@@ -347,6 +352,7 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
     }
 }
 //Pass String for direction "forward diagnal left", "backward diagnal left", "forward diagnal right", "backward diagnal right", "left", "right".
+//TODO: Find logic for calculating stepWait (amount of delay we need). Should be in step function
 void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 
 
@@ -357,10 +363,7 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 				rightFrontStep += 1;
 				leftBackStep += 1;
 				leftFrontStep -= 1;
-				sendSteplSignalToBackRight(rightBackStep % 4);
-				sendStepSignalToFrontRight(rightFrontStep % 4);
-				sendStepSignalToBackLeft(leftBackStep % 4);
-				SendStepSignalToFrontLeft(leftFrontStep % 4);
+				//singleStep(stepWait);
 			}
 			break;
 		case("right"):
@@ -369,10 +372,8 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 				rightFrontStep -= 1;
 				leftBackStep -= 1;
 				leftFrontStep += 1;
-				sendSteplSignalToBackRight(rightBackStep % 4);
-				sendStepSignalToFrontRight(rightFrontStep % 4);
-				sendStepSignalToBackLeft(leftBackStep % 4);
-				sendStepSignalToFrontLeft(leftFrontStep % 4);
+				//singleStep(stepWait);
+
 			}
 			break;
 		case("forward diagnal left"):
@@ -380,7 +381,7 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 				leftFrontStep += 1;
 				rightBackStep += 1;
 				sendStepSignalToFrontLeft(leftFrontStep % 4);
-				sendSteplSignalToBackRight(leftBackStep % 4);
+				sendStepSignalToBackRight(leftBackStep % 4);
 			}
 			break;
 		case("backward diagnol left"):
@@ -388,7 +389,7 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 				leftFrontStep -= 1;
 				rightBackStep -= 1;
 				sendStepSignalToFrontLeft(leftFrontStep % 4);
-				sendSteplSignalToBackRight(leftBackStep % 4);
+				sendStepSignalToBackRight(leftBackStep % 4);
 			}
 			break;
 		case("forward diagnol right"):
@@ -396,7 +397,7 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 				leftBackStep += 1;
 				rightFrontStep += 1;
 				sendStepSignalToBackLeft(leftBackStep % 4);
-				sendSteplSignalToFrontRight(leftFrontStep % 4);
+				sendStepSignalToFrontRight(leftFrontStep % 4);
 			}
 			break;
 		case("backward diagnol right"):
@@ -404,7 +405,7 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
 				leftBackStep -= 1;
 				rightFrontStep -= 1;
 				sendStepSignalToBackLeft(leftBackStep % 4);
-				sendSteplSignalToFrontRight(leftFrontStep % 4);
+				sendStepSignalToFrontRight(leftFrontStep % 4);
 			}
 	}
 }
