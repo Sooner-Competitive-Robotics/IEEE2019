@@ -225,3 +225,65 @@ void StepperMotorDrivetrain::sendStepSignalToRight(int stepID)
 			break;
     }
 }
+//Pass String for direction "forward diagnal left", "backward diagnal left", "forward diagnal right", "backward diagnal right", "left", "right".
+void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
+
+
+	switch(direction){
+		case("left"):
+			for(int i = 0; i < distance; i++){
+				rightBackStep -= 1;
+				rightFrontStep += 1;
+				leftBackStep += 1;
+				leftFrontStep -= 1;
+				sendSteplSignalToBackRight(rightBackStep % 4);
+				sendStepSignalToFrontRight(rightFrontStep % 4);
+				sendStepSignalToBackLeft(leftBackStep % 4);
+				SendStepSignalToFrontLeft(leftFrontStep % 4);
+			}
+			break;
+		case("right"):
+			for(int i = 0; i < distance; i++){
+				rightBackStep += 1;
+				rightFrontStep -= 1;
+				leftBackStep -= 1;
+				leftFrontStep += 1;
+				sendSteplSignalToBackRight(rightBackStep % 4);
+				sendStepSignalToFrontRight(rightFrontStep % 4);
+				sendStepSignalToBackLeft(leftBackStep % 4);
+				sendStepSignalToFrontLeft(leftFrontStep % 4);
+			}
+			break;
+		case("forward diagnal left"):
+			for(int i = 0; i < distance; i++){
+				leftFrontStep += 1;
+				rightBackStep += 1;
+				sendStepSignalToFrontLeft(leftFrontStep % 4);
+				sendSteplSignalToBackRight(leftBackStep % 4);
+			}
+			break;
+		case("backward diagnol left"):
+			for(int i = 0; i < distance; i++){
+				leftFrontStep -= 1;
+				rightBackStep -= 1;
+				sendStepSignalToFrontLeft(leftFrontStep % 4);
+				sendSteplSignalToBackRight(leftBackStep % 4);
+			}
+			break;
+		case("forward diagnol right"):
+			for(int i = 0; i < distance; i++){
+				leftBackStep += 1;
+				rightFrontStep += 1;
+				sendStepSignalToBackLeft(leftBackStep % 4);
+				sendSteplSignalToFrontRight(leftFrontStep % 4);
+			}
+			break;
+		case("backward diagnol right"):
+			for(int i = 0; i < distance; i++){
+				leftBackStep -= 1;
+				rightFrontStep -= 1;
+				sendStepSignalToBackLeft(leftBackStep % 4);
+				sendSteplSignalToFrontRight(leftFrontStep % 4);
+			}
+	}
+}
