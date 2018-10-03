@@ -377,12 +377,12 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
  *
  * Use drivetrain.convertInchesToSteps(inches) in your .ino for steps
  */
-void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection unsigned int steps){
+void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection unsigned int stepsActual){
 	bool millisecond_interval = false;
 	
 	//We basically force left and right to be equal here, because they should be.
 	//NO CURVE TURNS ALLOWED (Down with tank steer)
-	int steps = min(abs(left), abs(right));
+	int steps = abs(stepsActual);
 	
 	double T = calculateStepWait(steps);
 	
@@ -394,76 +394,102 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection u
 	}
 	
 	unsigned long stepWait = static_cast<int>(T);
-
-	switch(direction){
-		// Left Strafe
-		case(forwardDirection == 0, sidewayDirection == -1):
-			for(int i = 0; i < steps; i++){
-				backRightSteps -= 1;
-				frontRightSteps += 1;
-				backLeftSteps += 1;
-				frontLeftSteps -= 1;
-				if(millisecond_interval)
-				{
-					singleStep(stepWait);
-				}
-				else
-				{
-					singleStep_us(stepWait);
-				}
+		
+	// Straight Forward
+	if(forwardDirection == 1 && sidewayDirection == 0)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			step(steps, steps);
+		}
+	}
+	// Straight Backwards
+	else if(forwardDirection == -1 && sidewayDirection == 0)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			step(-steps, -steps);
+		}
+	}
+	// Left Strafe
+	else if(forwardDirection == 0 && sidewayDirection == -1)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			backRightSteps -= 1;
+			frontRightSteps += 1;
+			backLeftSteps += 1;
+			frontLeftSteps -= 1;
+			if(millisecond_interval)
+			{
+				singleStep(stepWait);
 			}
-			break;
-		// Right Strafe
-		case(forwardDirection == 0, sidewayDirection == 1):
-			for(int i = 0; i < steps; i++){
-				backRightSteps += 1;
-				frontRightSteps -= 1;
-				backLeftSteps -= 1;
-				frontLeftSteps += 1;
-				if(millisecond_interval)
-				{
-					singleStep(stepWait);
-				}
-				else
-				{
-					singleStep_us(stepWait);
-				}
+			else
+			{
+				singleStep_us(stepWait);
 			}
-			break;
-		// Forward Left Strafe
-		case(forwardDirection == 1, sidewayDirection == -1):
-			for(int i = 0; i < steps; i++){
-				frontLeftSteps += 1;
-				backRightSteps += 1;
-				sendStepSignalToFrontLeft(frontLeftSteps % 4);
-				sendStepSignalToBackRight(backRightSteps % 4);
+		}
+	}
+	// Right Strafe
+	else if(forwardDirection == 0 && sidewayDirection == 1)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			backRightSteps += 1;
+			frontRightSteps -= 1;
+			backLeftSteps -= 1;
+			frontLeftSteps += 1;
+			if(millisecond_interval)
+			{
+				singleStep(stepWait);
 			}
-			break;
-		// Backward Left Strafe 
-		case(forwardDirection == -1, sidewayDirection == -1):
-			for(int i = 0; i < steps; i++){
-				frontLeftSteps -= 1;
-				backRightSteps -= 1;
-				sendStepSignalToFrontLeft(frontLeftSteps % 4);
-				sendStepSignalToBackRight(backRightSteps % 4);
+			else
+			{
+				singleStep_us(stepWait);
 			}
-			break;
-		// Forward Right Strafe
-		case(forwardDirection == 1, sidewayDirection == 1):
-			for(int i = 0; i < steps; i++){
-				backLeftSteps += 1;
-				frontRightSteps += 1;
-				sendStepSignalToBackLeft(backLeftSteps % 4);
-				sendStepSignalToFrontRight(frontRightSteps % 4);
-			}
-			break;
-		// Backward Right Strafe
-		case(forwardDirection == -1, sidewayDirection == 1):
-			for(int i = 0; i < steps; i++){
-				backLeftSteps -= 1;
-				frontRightSteps -= 1;
-				sendStepSignalToBackLeft(backLeftSteps % 4);
-				sendStepSignalToFrontRight(frontRightSteps % 4);
-			}
+		}
+	}
+	// Forward Left Strafe
+	else if(forwardDirection == 1 && sidewayDirection == -1)
+	{
+		for(int i = 0; i < steps; i++){
+			frontLeftSteps += 1;
+			backRightSteps += 1;
+			sendStepSignalToFrontLeft(frontLeftSteps % 4);
+			sendStepSignalToBackRight(backRightSteps % 4);
+		}
+	}
+	// Backward Left Strafe 
+	else if(forwardDirection == -1 && sidewayDirection == -1)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			frontLeftSteps -= 1;
+			backRightSteps -= 1;
+			sendStepSignalToFrontLeft(frontLeftSteps % 4);
+			sendStepSignalToBackRight(backRightSteps % 4);
+		}
+	}
+	// Forward Right Strafe
+	else if(forwardDirection == 1 && sidewayDirection == 1)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			backLeftSteps += 1;
+			frontRightSteps += 1;
+			sendStepSignalToBackLeft(backLeftSteps % 4);
+			sendStepSignalToFrontRight(frontRightSteps % 4);
+		}
+	}
+	// Backward Right Strafe
+	else if(forwardDirection == -1 && sidewayDirection == 1)
+	{
+		for(int i = 0; i < steps; i++)
+		{
+			backLeftSteps -= 1;
+			frontRightSteps -= 1;
+			sendStepSignalToBackLeft(backLeftSteps % 4);
+			sendStepSignalToFrontRight(frontRightSteps % 4);
+		}
 	}
 }
