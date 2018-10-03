@@ -370,8 +370,14 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
 			break;
     }
 }
-//Pass String for direction "forward diagnal left", "backward diagnal left", "forward diagnal right", "backward diagnal right", "left", "right".
-void StepperMotorDrivetrain::strafe(string direction, unsigned int steps){
+/* Pass ints for direction
+ * 
+ * forwardDirection: 0-->None	1-->Forward		-1-->Backwards
+ * sidewayDirection: 0-->None	1-->Right 		-1-->Left
+ *
+ * Use drivetrain.convertInchesToSteps(inches) in your .ino for steps
+ */
+void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection unsigned int steps){
 	bool millisecond_interval = false;
 	
 	//We basically force left and right to be equal here, because they should be.
@@ -390,7 +396,8 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int steps){
 	unsigned long stepWait = static_cast<int>(T);
 
 	switch(direction){
-		case("left"):
+		// Left Strafe
+		case(forwardDirection == 0, sidewayDirection == -1):
 			for(int i = 0; i < steps; i++){
 				backRightSteps -= 1;
 				frontRightSteps += 1;
@@ -406,7 +413,8 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int steps){
 				}
 			}
 			break;
-		case("right"):
+		// Right Strafe
+		case(forwardDirection == 0, sidewayDirection == 1):
 			for(int i = 0; i < steps; i++){
 				backRightSteps += 1;
 				frontRightSteps -= 1;
@@ -422,32 +430,36 @@ void StepperMotorDrivetrain::strafe(string direction, unsigned int steps){
 				}
 			}
 			break;
-		case("forward diagonal left"):
-			for(int i = 0; i < distance; i++){
+		// Forward Left Strafe
+		case(forwardDirection == 1, sidewayDirection == -1):
+			for(int i = 0; i < steps; i++){
 				frontLeftSteps += 1;
 				backRightSteps += 1;
 				sendStepSignalToFrontLeft(frontLeftSteps % 4);
 				sendStepSignalToBackRight(backRightSteps % 4);
 			}
 			break;
-		case("backward diagonal left"):
-			for(int i = 0; i < distance; i++){
+		// Backward Left Strafe 
+		case(forwardDirection == -1, sidewayDirection == -1):
+			for(int i = 0; i < steps; i++){
 				frontLeftSteps -= 1;
 				backRightSteps -= 1;
 				sendStepSignalToFrontLeft(frontLeftSteps % 4);
 				sendStepSignalToBackRight(backRightSteps % 4);
 			}
 			break;
-		case("forward diagonal right"):
-			for(int i = 0; i < distance; i++){
+		// Forward Right Strafe
+		case(forwardDirection == 1, sidewayDirection == 1):
+			for(int i = 0; i < steps; i++){
 				backLeftSteps += 1;
 				frontRightSteps += 1;
 				sendStepSignalToBackLeft(backLeftSteps % 4);
 				sendStepSignalToFrontRight(frontRightSteps % 4);
 			}
 			break;
-		case("backward diagonal right"):
-			for(int i = 0; i < distance; i++){
+		// Backward Right Strafe
+		case(forwardDirection == -1, sidewayDirection == 1):
+			for(int i = 0; i < steps; i++){
 				backLeftSteps -= 1;
 				frontRightSteps -= 1;
 				sendStepSignalToBackLeft(backLeftSteps % 4);
