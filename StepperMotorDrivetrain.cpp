@@ -130,12 +130,13 @@ void StepperMotorDrivetrain::step(int left, int right)
 	//NO CURVE TURNS ALLOWED (Down with tank steer)
 	int steps = min(abs(left), abs(right));
 	
+	
 	int leftDirection = left < 0 ? -1 : 1;
 	int rightDirection = right < 0 ? -1 : 1;
 	
 	//Determine how many microseconds we want to wait, and convert to an integer
 	double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
-	double T = (totalTime / steps) / 2;
+	double T = calculateStepWait(steps);
 	
 	//Convert to milliseconds if delay would be greater than 5,000 us.
 	if(T > 5000)
@@ -148,19 +149,27 @@ void StepperMotorDrivetrain::step(int left, int right)
 	
 	for(int i = 0; i < steps; ++i)
 	{
-		this->leftSteps += leftDirection;
-		this->rightSteps += rightDirection;
+		this->frontLeftSteps += leftDirection;
+		this->backLeftSteps += leftDirection;
+		this->frontRightSteps += rightDirection;
+		this->backRightSteps += rightDirection;
 		
-		this->leftCounter += leftDirection;
-		this->rightCounter += rightDirection;
+		this->frontLeftCounter += leftDirection;
+		this->backLeftCounter += leftDirection;
+		this->frontRightCounter += rightDirection;
+		this->backRightCounter += rightDirection;
 		
 		//Constrain the counters to the step boundaries
 		//Left
-		this->leftCounter = this->leftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->leftCounter;
-		this->leftCounter = this->leftCounter >= STEPS_PER_REVOLUTION ? 0 : this->leftCounter;
+		this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+		this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+		this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+		this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
 		//Right
-		this->rightCounter = this->rightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->rightCounter;
-		this->rightCounter = this->rightCounter >= STEPS_PER_REVOLUTION ? 0 : this->rightCounter;
+		this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+		this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+		this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+		this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
 
 		if(millisecond_interval)
 		{
@@ -171,6 +180,17 @@ void StepperMotorDrivetrain::step(int left, int right)
 			singleStep_us(stepWait);
 		}
 	}
+}
+
+//calculate the amount of time the amount of steps will take
+double StepperMotorDrivetrain::calculateStepWait(int steps) {
+
+	//Determine how many microseconds we want to wait, and convert to an integer	
+	double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
+	double T = (totalTime / steps) / 2;
+	
+	
+	return T;
 }
 
 //resets the step counters to 0
@@ -212,7 +232,6 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 }
 
 //Private Functions
-
 void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
 {
 	sendStepSignalToFrontLeft(frontLeftCounter % 4);
@@ -335,7 +354,7 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
 			digitalWrite(bRightIN1, LOW);
 			digitalWrite(bRightIN2, HIGH);
 			digitalWrite(bRightIN3, HIGH);
-			digitalWrite(rightIN4, LOW);
+			digitalWrite(bRightIN4, LOW);
 			break;
 		case 2:  //0101
 			digitalWrite(bRightIN1, LOW);
@@ -352,60 +371,87 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
     }
 }
 //Pass String for direction "forward diagnal left", "backward diagnal left", "forward diagnal right", "backward diagnal right", "left", "right".
-//TODO: Find logic for calculating stepWait (amount of delay we need). Should be in step function
-void StepperMotorDrivetrain::strafe(string direction, unsigned int distance){
-
+void StepperMotorDrivetrain::strafe(string direction, unsigned int steps){
+	bool millisecond_interval = false;
+	
+	//We basically force left and right to be equal here, because they should be.
+	//NO CURVE TURNS ALLOWED (Down with tank steer)
+	int steps = min(abs(left), abs(right));
+	
+	double T = calculateStepWait(steps);
+	
+	//Convert to milliseconds if delay would be greater than 5,000 us.
+	if(T > 5000)
+	{
+		T /= 1000;
+		millisecond_interval = true;
+	}
+	
+	unsigned long stepWait = static_cast<int>(T);
 
 	switch(direction){
 		case("left"):
-			for(int i = 0; i < distance; i++){
-				rightBackStep -= 1;
-				rightFrontStep += 1;
-				leftBackStep += 1;
-				leftFrontStep -= 1;
-				//singleStep(stepWait);
+			for(int i = 0; i < steps; i++){
+				backRightSteps -= 1;
+				frontRightSteps += 1;
+				backLeftSteps += 1;
+				frontLeftSteps -= 1;
+				if(millisecond_interval)
+				{
+					singleStep(stepWait);
+				}
+				else
+				{
+					singleStep_us(stepWait);
+				}
 			}
 			break;
 		case("right"):
-			for(int i = 0; i < distance; i++){
-				rightBackStep += 1;
-				rightFrontStep -= 1;
-				leftBackStep -= 1;
-				leftFrontStep += 1;
-				//singleStep(stepWait);
-
+			for(int i = 0; i < steps; i++){
+				backRightSteps += 1;
+				frontRightSteps -= 1;
+				backLeftSteps -= 1;
+				frontLeftSteps += 1;
+				if(millisecond_interval)
+				{
+					singleStep(stepWait);
+				}
+				else
+				{
+					singleStep_us(stepWait);
+				}
 			}
 			break;
-		case("forward diagnal left"):
+		case("forward diagonal left"):
 			for(int i = 0; i < distance; i++){
-				leftFrontStep += 1;
-				rightBackStep += 1;
-				sendStepSignalToFrontLeft(leftFrontStep % 4);
-				sendStepSignalToBackRight(leftBackStep % 4);
+				frontLeftSteps += 1;
+				backRightSteps += 1;
+				sendStepSignalToFrontLeft(frontLeftSteps % 4);
+				sendStepSignalToBackRight(backRightSteps % 4);
 			}
 			break;
-		case("backward diagnol left"):
+		case("backward diagonal left"):
 			for(int i = 0; i < distance; i++){
-				leftFrontStep -= 1;
-				rightBackStep -= 1;
-				sendStepSignalToFrontLeft(leftFrontStep % 4);
-				sendStepSignalToBackRight(leftBackStep % 4);
+				frontLeftSteps -= 1;
+				backRightSteps -= 1;
+				sendStepSignalToFrontLeft(frontLeftSteps % 4);
+				sendStepSignalToBackRight(backRightSteps % 4);
 			}
 			break;
-		case("forward diagnol right"):
+		case("forward diagonal right"):
 			for(int i = 0; i < distance; i++){
-				leftBackStep += 1;
-				rightFrontStep += 1;
-				sendStepSignalToBackLeft(leftBackStep % 4);
-				sendStepSignalToFrontRight(leftFrontStep % 4);
+				backLeftSteps += 1;
+				frontRightSteps += 1;
+				sendStepSignalToBackLeft(backLeftSteps % 4);
+				sendStepSignalToFrontRight(frontRightSteps % 4);
 			}
 			break;
-		case("backward diagnol right"):
+		case("backward diagonal right"):
 			for(int i = 0; i < distance; i++){
-				leftBackStep -= 1;
-				rightFrontStep -= 1;
-				sendStepSignalToBackLeft(leftBackStep % 4);
-				sendStepSignalToFrontRight(leftFrontStep % 4);
+				backLeftSteps -= 1;
+				frontRightSteps -= 1;
+				sendStepSignalToBackLeft(backLeftSteps % 4);
+				sendStepSignalToFrontRight(frontRightSteps % 4);
 			}
 	}
 }

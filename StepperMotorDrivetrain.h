@@ -30,6 +30,8 @@ class StepperMotorDrivetrain
 		
 		void step(int left, int right);
 		
+		double calculateStepWait(int steps);
+		
 		void strafe(string direction, unsigned int steps);
 		
 		void setRPM(float speed);
