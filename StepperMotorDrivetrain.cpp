@@ -234,21 +234,22 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 //Private Functions
 void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) {
-		
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) 
+	{	
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
 		sendStepSignalToBackLeft(backLeftCounter % 4);
 		sendStepSignalToBackRight(backRightCounter % 4);
-    
 	}
 	
-	else if(forwardDirection != 0 && sidewayDirection == -1) {
+	else if(forwardDirection != 0 && sidewayDirection == -1) 
+	{
 		sendStepSignalToFrontLeft(frontLeftSteps % 4);
 		sendStepSignalToBackRight(backRightSteps % 4);
 	}
 	
-	else if(forwardDirection != 0 && sidewayDirection == 1) {
+	else if(forwardDirection != 0 && sidewayDirection == 1) 
+	{
 		sendStepSignalToBackLeft(frontLeftSteps % 4);
 		sendStepSignalToFrontRight(backRightSteps % 4);
 	}
@@ -259,21 +260,22 @@ void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirecti
 //same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
 {
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) {
-		
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) 
+	{
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
 		sendStepSignalToBackLeft(backLeftCounter % 4);
 		sendStepSignalToBackRight(backRightCounter % 4);
-    
 	}
 	
-	else if(forwardDirection != 0 && sidewayDirection == -1) {
+	else if(forwardDirection != 0 && sidewayDirection == -1) 
+	{
 		sendStepSignalToFrontLeft(frontLeftSteps % 4);
 		sendStepSignalToBackRight(backRightSteps % 4);
 	}
 	
-	else if(forwardDirection != 0 && sidewayDirection == 1) {
+	else if(forwardDirection != 0 && sidewayDirection == 1) 
+	{
 		sendStepSignalToBackLeft(frontLeftSteps % 4);
 		sendStepSignalToFrontRight(backRightSteps % 4);
 	}
