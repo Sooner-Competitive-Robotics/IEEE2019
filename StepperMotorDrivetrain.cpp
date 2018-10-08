@@ -101,7 +101,7 @@ void StepperMotorDrivetrain::initFrontRight(int in1, int in2, int in3, int in4)
 }
 
 //sets pins for back right motors
-void StepperMotorDrivetrain::initRight(int in1, int in2, int in3, int in4)
+void StepperMotorDrivetrain::initBackRight(int in1, int in2, int in3, int in4)
 {
 	this->bRightIN1 = in1;
 	this->bRightIN2 = in2;
@@ -173,11 +173,11 @@ void StepperMotorDrivetrain::step(int left, int right)
 
 		if(millisecond_interval)
 		{
-			singleStep(stepWait);
+			singleStep(1, 0, stepWait);
 		}
 		else
 		{
-			singleStep_us(stepWait);
+			singleStep_us(1, 0, stepWait);
 		}
 	}
 }
@@ -196,8 +196,10 @@ double StepperMotorDrivetrain::calculateStepWait(int steps) {
 //resets the step counters to 0
 void StepperMotorDrivetrain::resetStepCounter()
 {
-	leftSteps = 0;
-	rightSteps = 0;
+	frontLeftSteps = 0;
+	frontRightSteps = 0;
+	backLeftSteps = 0;
+	backRightSteps = 0;
 }
 
 //getter method for left motor steps
@@ -234,7 +236,7 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 //Private Functions
 void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) 
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0)) 
 	{	
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -258,9 +260,9 @@ void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirecti
 }
 
 //same as above but with a different delay function
-void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
+void StepperMotorDrivetrain::singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) 
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0))
 	{
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -409,7 +411,7 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
  *
  * Use drivetrain.convertInchesToSteps(inches) in your .ino for steps
  */
-void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection unsigned int stepsActual){
+void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual){
 	bool millisecond_interval = false;
 	
 	//We basically force left and right to be equal here, because they should be.
@@ -454,11 +456,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection u
 			frontLeftSteps -= 1;
 			if(millisecond_interval)
 			{
-				singleStep(stepWait);
+				singleStep(0, -1, stepWait);
 			}
 			else
 			{
-				singleStep_us(stepWait);
+				singleStep_us(0, -1, stepWait);
 			}
 		}
 	}
@@ -473,11 +475,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection u
 			frontLeftSteps += 1;
 			if(millisecond_interval)
 			{
-				singleStep(stepWait);
+				singleStep(0, -1, stepWait);
 			}
 			else
 			{
-				singleStep_us(stepWait);
+				singleStep_us(0, 1, stepWait);
 			}
 		}
 	}

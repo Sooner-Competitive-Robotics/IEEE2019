@@ -25,14 +25,16 @@ class StepperMotorDrivetrain
 
 		void operator=(const StepperMotorDrivetrain& drivetrain);
 		
-		void initLeft(int in1, int in2, int in3, int in4);
-		void initRight(int in1, int in2, int in3, int in4);
+		void initFrontLeft(int in1, int in2, int in3, int in4);
+		void initFrontRight(int in1, int in2, int in3, int in4);
+		void initBackLeft(int in1, int in2, int in3, int in4);
+		void initBackRight(int in1, int in2, int in3, int in4);
 		
 		void step(int left, int right);
 		
 		double calculateStepWait(int steps);
 		
-		void strafe(string direction, unsigned int steps);
+		void strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual);
 		
 		void setRPM(float speed);
 		void resetStepCounter();
@@ -46,7 +48,7 @@ class StepperMotorDrivetrain
 		
 	private:
 		//Front left Motor
-		int fLeftIN1, fLeftIN2, fleftIN3, fleftIN4;
+		int fLeftIN1, fLeftIN2, fLeftIN3, fLeftIN4;
 		
 		//Back left Motor 2
 		int bLeftIN1, bLeftIN2, bLeftIN3, bLeftIN4;
@@ -55,7 +57,7 @@ class StepperMotorDrivetrain
 		int fRightIN1, fRightIN2, fRightIN3, fRightIN4;
 		
 		//Back right Motor
-		int bRight2IN1, bRight2IN2, bRight2IN3, bRight2IN4;
+		int bRightIN1, bRightIN2, bRightIN3, bRightIN4;
 		
 		//RPM of all drive motors
 		float rpm;
@@ -69,8 +71,8 @@ class StepperMotorDrivetrain
 		int frontLeftCounter, frontRightCounter, backLeftCounter, backRightCounter;
 		
 		//Stepping functions
-		void singleStep(unsigned int stepWait);
-		void singleStep_us(unsigned int stepWait);
+		void singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait);
+		void singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait);
 		
 		void sendStepSignalToFrontLeft(int stepID);
 		void sendStepSignalToBackLeft(int stepID);
