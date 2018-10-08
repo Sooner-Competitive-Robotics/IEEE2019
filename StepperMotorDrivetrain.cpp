@@ -235,13 +235,8 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 
 //Private Functions
 void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait)
-<<<<<<< HEAD
 {
 	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0)) 
-=======
-{	//Sends signal to the motors to go forward or diagnol forward with delay in nanoseconds
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) 
->>>>>>> 0335771d760e92b2a7d7609bc1d39766d1f8d6c9
 	{	
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -267,13 +262,8 @@ void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirecti
 //same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
-<<<<<<< HEAD
 	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0))
 	{
-=======
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0) 
-	{	//Sends signal to the motors to go forward or diagnol forward with delay in microseconds
->>>>>>> 0335771d760e92b2a7d7609bc1d39766d1f8d6c9
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
 		sendStepSignalToBackLeft(backLeftCounter % 4);
