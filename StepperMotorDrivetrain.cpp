@@ -121,7 +121,6 @@ void StepperMotorDrivetrain::setRPM(float speed)
 }
 
 //moves the drivetrain
-//TODO: change step to accommodate 4 motors. Make the front and back motors the same values.
 void StepperMotorDrivetrain::step(int left, int right)
 {
 	bool millisecond_interval = false;
@@ -236,7 +235,7 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 //Private Functions
 void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0)) 
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(forwardDirection == 0 && sidewayDirection != 0)) 
 	{	
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -262,7 +261,7 @@ void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirecti
 //same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0))
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(forwardDirection == 0 && sidewayDirection != 0))
 	{
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -412,6 +411,7 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
  * Use drivetrain.convertInchesToSteps(inches) in your .ino for steps
  */
 void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual){
+	
 	bool millisecond_interval = false;
 	
 	//We basically force left and right to be equal here, because they should be.
@@ -432,18 +432,12 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	// Straight Forward
 	if(forwardDirection == 1 && sidewayDirection == 0)
 	{
-		for(int i = 0; i < steps; i++)
-		{
-			step(steps, steps);
-		}
+		step(steps, steps);
 	}
 	// Straight Backwards
 	else if(forwardDirection == -1 && sidewayDirection == 0)
 	{
-		for(int i = 0; i < steps; i++)
-		{
-			step(-steps, -steps);
-		}
+		step(-steps, -steps);
 	}
 	// Left Strafe
 	else if(forwardDirection == 0 && sidewayDirection == -1)
