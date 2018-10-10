@@ -134,7 +134,7 @@ void StepperMotorDrivetrain::step(int left, int right)
 	int rightDirection = right < 0 ? -1 : 1;
 	
 	//Determine how many microseconds we want to wait, and convert to an integer
-	double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
+	//double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
 	double T = calculateStepWait(steps);
 	
 	//Convert to milliseconds if delay would be greater than 5,000 us.
@@ -162,11 +162,13 @@ void StepperMotorDrivetrain::step(int left, int right)
 		//Left
 		this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
 		this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+		
 		this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
 		this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
 		//Right
 		this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
 		this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+		
 		this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
 		this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
 
@@ -417,18 +419,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	//We basically force left and right to be equal here, because they should be.
 	//NO CURVE TURNS ALLOWED (Down with tank steer)
 	int steps = abs(stepsActual);
-	
-	double T = calculateStepWait(steps);
-	
-	//Convert to milliseconds if delay would be greater than 5,000 us.
-	if(T > 5000)
-	{
-		T /= 1000;
-		millisecond_interval = true;
-	}
-	
-	unsigned long stepWait = static_cast<int>(T);
-		
+			
 	// Straight Forward
 	if(forwardDirection == 1 && sidewayDirection == 0)
 	{
@@ -439,85 +430,109 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	{
 		step(-steps, -steps);
 	}
+<<<<<<< HEAD
 	// Left Strafe
 	else if(forwardDirection == 0 && sidewayDirection == -1)
 	{
 		for(int i = 0; i < steps; i++)
+=======
+	
+	// Non basic movement
+	else {
+		
+		double T = calculateStepWait(steps);
+		
+		//Convert to milliseconds if delay would be greater than 5,000 us.
+		if(T > 5000)
 		{
-			backRightSteps -= 1;
-			frontRightSteps += 1;
-			backLeftSteps += 1;
-			frontLeftSteps -= 1;
-			if(millisecond_interval)
+			T /= 1000;
+			millisecond_interval = true;
+		}
+		
+		unsigned long stepWait = static_cast<int>(T);
+		
+		// Left Strafe
+		if(forwardDirection == 0 && sidewayDirection == -1)
+>>>>>>> refs/remotes/origin/master
+		{
+			for(int i = 0; i < steps; i++)
 			{
-				singleStep(0, -1, stepWait);
+				backRightSteps -= 1;
+				frontRightSteps += 1;
+				backLeftSteps += 1;
+				frontLeftSteps -= 1;
+				if(millisecond_interval)
+				{
+					singleStep(0, -1, stepWait);
+				}
+				else
+				{
+					singleStep_us(0, -1, stepWait);
+				}
 			}
-			else
+		}
+		// Right Strafe
+		else if(forwardDirection == 0 && sidewayDirection == 1)
+		{
+			for(int i = 0; i < steps; i++)
 			{
-				singleStep_us(0, -1, stepWait);
+				backRightSteps += 1;
+				frontRightSteps -= 1;
+				backLeftSteps -= 1;
+				frontLeftSteps += 1;
+				if(millisecond_interval)
+				{
+					singleStep(0, -1, stepWait);
+				}
+				else
+				{
+					singleStep_us(0, 1, stepWait);
+				}
 			}
 		}
-	}
-	// Right Strafe
-	else if(forwardDirection == 0 && sidewayDirection == 1)
-	{
-		for(int i = 0; i < steps; i++)
+		// Forward Left Strafe
+		else if(forwardDirection == 1 && sidewayDirection == -1)
 		{
-			backRightSteps += 1;
-			frontRightSteps -= 1;
-			backLeftSteps -= 1;
-			frontLeftSteps += 1;
-			if(millisecond_interval)
+			for(int i = 0; i < steps; i++){
+				frontLeftSteps += 1;
+				backRightSteps += 1;
+				sendStepSignalToFrontLeft(frontLeftSteps % 4);
+				sendStepSignalToBackRight(backRightSteps % 4);
+			}
+		}
+		// Backward Left Strafe 
+		else if(forwardDirection == -1 && sidewayDirection == -1)
+		{
+			for(int i = 0; i < steps; i++)
 			{
-				singleStep(0, -1, stepWait);
+				frontLeftSteps -= 1;
+				backRightSteps -= 1;
+				sendStepSignalToFrontLeft(frontLeftSteps % 4);
+				sendStepSignalToBackRight(backRightSteps % 4);
 			}
-			else
+		}
+		// Forward Right Strafe
+		else if(forwardDirection == 1 && sidewayDirection == 1)
+		{
+			for(int i = 0; i < steps; i++)
 			{
-				singleStep_us(0, 1, stepWait);
+				backLeftSteps += 1;
+				frontRightSteps += 1;
+				sendStepSignalToBackLeft(backLeftSteps % 4);
+				sendStepSignalToFrontRight(frontRightSteps % 4);
 			}
 		}
-	}
-	// Forward Left Strafe
-	else if(forwardDirection == 1 && sidewayDirection == -1)
-	{
-		for(int i = 0; i < steps; i++){
-			frontLeftSteps += 1;
-			backRightSteps += 1;
-			sendStepSignalToFrontLeft(frontLeftSteps % 4);
-			sendStepSignalToBackRight(backRightSteps % 4);
-		}
-	}
-	// Backward Left Strafe 
-	else if(forwardDirection == -1 && sidewayDirection == -1)
-	{
-		for(int i = 0; i < steps; i++)
+		// Backward Right Strafe
+		else if(forwardDirection == -1 && sidewayDirection == 1)
 		{
-			frontLeftSteps -= 1;
-			backRightSteps -= 1;
-			sendStepSignalToFrontLeft(frontLeftSteps % 4);
-			sendStepSignalToBackRight(backRightSteps % 4);
+			for(int i = 0; i < steps; i++)
+			{
+				backLeftSteps -= 1;
+				frontRightSteps -= 1;
+				sendStepSignalToBackLeft(backLeftSteps % 4);
+				sendStepSignalToFrontRight(frontRightSteps % 4);
+			}
 		}
+	}	
+
 	}
-	// Forward Right Strafe
-	else if(forwardDirection == 1 && sidewayDirection == 1)
-	{
-		for(int i = 0; i < steps; i++)
-		{
-			backLeftSteps += 1;
-			frontRightSteps += 1;
-			sendStepSignalToBackLeft(backLeftSteps % 4);
-			sendStepSignalToFrontRight(frontRightSteps % 4);
-		}
-	}
-	// Backward Right Strafe
-	else if(forwardDirection == -1 && sidewayDirection == 1)
-	{
-		for(int i = 0; i < steps; i++)
-		{
-			backLeftSteps -= 1;
-			frontRightSteps -= 1;
-			sendStepSignalToBackLeft(backLeftSteps % 4);
-			sendStepSignalToFrontRight(frontRightSteps % 4);
-		}
-	}
-}
