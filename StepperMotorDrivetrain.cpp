@@ -430,13 +430,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	{
 		step(-steps, -steps);
 	}
-<<<<<<< HEAD
-	// Left Strafe
-	else if(forwardDirection == 0 && sidewayDirection == -1)
-	{
-		for(int i = 0; i < steps; i++)
-=======
-	
+
 	// Non basic movement
 	else {
 		
@@ -453,7 +447,6 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		
 		// Left Strafe
 		if(forwardDirection == 0 && sidewayDirection == -1)
->>>>>>> refs/remotes/origin/master
 		{
 			for(int i = 0; i < steps; i++)
 			{
