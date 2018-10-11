@@ -201,30 +201,32 @@ void StepperMotorDrivetrain::resetStepCounter()
 	frontRightSteps = 0;
 	backLeftSteps = 0;
 	backRightSteps = 0;
+	
+	
 }
 
 //getter method for left motor steps
 long StepperMotorDrivetrain::getFrontLeftSteps()
 {
-	return this->frontLeftSteps;
+	return this->frontLeftCounter;
 }
 
 //getter method for left motor steps
 long StepperMotorDrivetrain::getBackLeftSteps()
 {
-	return this->backLeftSteps;
+	return this->backLeftCounter;
 }
 
 //getter method for right motor steps
 long StepperMotorDrivetrain::getFrontRightSteps()
 {
-	return this->frontRightSteps;
+	return this->frontRightCounter;
 }
 
 //getter method for right motor steps
 long StepperMotorDrivetrain::getBackRightSteps()
 {
-	return this->backRightSteps;
+	return this->backRightCounter;
 }
 
 //helper method to convert inches to steps
@@ -237,7 +239,17 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 //Private Functions
 void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
+<<<<<<< HEAD
 	if((forwardDirection != 0 && sidewayDirection == 0 )||(forwardDirection == 0 && sidewayDirection != 0)) 
+=======
+	sendStepSignalToFrontLeft(frontLeftCounter % 4);
+	sendStepSignalToFrontRight(frontRightCounter % 4);
+	sendStepSignalToBackLeft(backLeftCounter % 4);
+	sendStepSignalToBackRight(backRightCounter % 4);
+	
+	/*
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0)) 
+>>>>>>> 66b4c1107d92aa66ba111543547ce01197220e21
 	{	
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -247,23 +259,33 @@ void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirecti
 	
 	else if(forwardDirection != 0 && sidewayDirection == -1) 
 	{
-		sendStepSignalToFrontLeft(frontLeftSteps % 4);
-		sendStepSignalToBackRight(backRightSteps % 4);
+		sendStepSignalToFrontLeft(frontLeftCounter % 4);
+		sendStepSignalToBackRight(backRightCounter % 4);
 	}
 	
 	else if(forwardDirection != 0 && sidewayDirection == 1) 
 	{
-		sendStepSignalToBackLeft(frontLeftSteps % 4);
-		sendStepSignalToFrontRight(backRightSteps % 4);
+		sendStepSignalToBackLeft(frontLeftCounter % 4);
+		sendStepSignalToFrontRight(backRightCounter % 4);
 	}
-			
+	*/	
 	delay(stepWait); // Wait
 }
 
 //same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait)
 {
+<<<<<<< HEAD
 	if((forwardDirection != 0 && sidewayDirection == 0 )||(forwardDirection == 0 && sidewayDirection != 0))
+=======
+	sendStepSignalToFrontLeft(frontLeftCounter % 4);
+	sendStepSignalToFrontRight(frontRightCounter % 4);
+	sendStepSignalToBackLeft(backLeftCounter % 4);
+	sendStepSignalToBackRight(backRightCounter % 4);
+	
+	/*
+	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0))
+>>>>>>> 66b4c1107d92aa66ba111543547ce01197220e21
 	{
 		sendStepSignalToFrontLeft(frontLeftCounter % 4);
 		sendStepSignalToFrontRight(frontRightCounter % 4);
@@ -282,7 +304,7 @@ void StepperMotorDrivetrain::singleStep_us(int forwardDirection, int sidewayDire
 		sendStepSignalToBackLeft(frontLeftSteps % 4);
 		sendStepSignalToFrontRight(backRightSteps % 4);
 	}
-	
+	*/
     delayMicroseconds(stepWait); // Wait
 }
 
@@ -423,16 +445,19 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	// Straight Forward
 	if(forwardDirection == 1 && sidewayDirection == 0)
 	{
+		Serial.print("Forward Strafe \n");
 		step(steps, steps);
 	}
 	// Straight Backwards
 	else if(forwardDirection == -1 && sidewayDirection == 0)
 	{
+		Serial.print("Backward Strafe \n");
 		step(-steps, -steps);
 	}
 
 	// Non basic movement
-	else {
+	else 
+	{
 		
 		double T = calculateStepWait(steps);
 		
@@ -448,12 +473,35 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Left Strafe
 		if(forwardDirection == 0 && sidewayDirection == -1)
 		{
+			Serial.print("Left Strafe \n");
 			for(int i = 0; i < steps; i++)
 			{
-				backRightSteps -= 1;
-				frontRightSteps += 1;
-				backLeftSteps += 1;
-				frontLeftSteps -= 1;
+				/*
+				backRightCounter -= 1;
+				frontRightCounter += 1;
+				backLeftCounter += 1;
+				frontLeftCounter -= 1;
+				*/
+				
+				backRightCounter -= -1;
+				frontRightCounter += -1;
+				backLeftCounter += 1;
+				frontLeftCounter -= 1;
+				
+				//Constrain the counters to the step boundaries
+				//Left
+				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+				
+				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+				//Right
+				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+				
+				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				
 				if(millisecond_interval)
 				{
 					singleStep(0, -1, stepWait);
@@ -467,12 +515,35 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Right Strafe
 		else if(forwardDirection == 0 && sidewayDirection == 1)
 		{
+			Serial.print("Right Strafe \n");
 			for(int i = 0; i < steps; i++)
 			{
-				backRightSteps += 1;
-				frontRightSteps -= 1;
-				backLeftSteps -= 1;
-				frontLeftSteps += 1;
+				/*
+				backRightCounter += 1;
+				frontRightCounter -= 1;
+				backLeftCounter -= 1;
+				frontLeftCounter += 1;
+				*/
+				
+				backRightCounter += -1;
+				frontRightCounter -= -1;
+				backLeftCounter -= 1;
+				frontLeftCounter += 1;
+				
+				//Constrain the counters to the step boundaries
+				//Left
+				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+				
+				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+				//Right
+				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+				
+				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				
 				if(millisecond_interval)
 				{
 					singleStep(0, -1, stepWait);
@@ -486,46 +557,117 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Forward Left Strafe
 		else if(forwardDirection == 1 && sidewayDirection == -1)
 		{
-			for(int i = 0; i < steps; i++){
-				frontLeftSteps += 1;
-				backRightSteps += 1;
-				sendStepSignalToFrontLeft(frontLeftSteps % 4);
-				sendStepSignalToBackRight(backRightSteps % 4);
+			Serial.print("Forward Left Strafe \n");
+			for(int i = 0; i < steps; i++)
+			{
+				
+				backRightCounter += -1;
+				frontLeftCounter += 1;
+				
+				//Constrain the counters to the step boundaries
+				//Left
+				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+
+				//Right
+				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				
+				if(millisecond_interval)
+				{
+					singleStep(0, -1, stepWait);
+				}
+				else
+				{
+					singleStep_us(0, -1, stepWait);
+				}
 			}
 		}
 		// Backward Left Strafe 
 		else if(forwardDirection == -1 && sidewayDirection == -1)
 		{
+			Serial.print("Backward Left Strafe \n");
 			for(int i = 0; i < steps; i++)
 			{
-				frontLeftSteps -= 1;
-				backRightSteps -= 1;
-				sendStepSignalToFrontLeft(frontLeftSteps % 4);
-				sendStepSignalToBackRight(backRightSteps % 4);
+				
+				backRightCounter -= -1;
+				frontLeftCounter -= 1;
+				
+				//Constrain the counters to the step boundaries
+				//Left
+				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+				//Right
+				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				
+				if(millisecond_interval)
+				{
+					singleStep(0, -1, stepWait);
+				}
+				else
+				{
+					singleStep_us(0, -1, stepWait);
+				}
 			}
 		}
 		// Forward Right Strafe
 		else if(forwardDirection == 1 && sidewayDirection == 1)
 		{
+			Serial.print("Forward Right Strafe \n");
 			for(int i = 0; i < steps; i++)
 			{
-				backLeftSteps += 1;
-				frontRightSteps += 1;
-				sendStepSignalToBackLeft(backLeftSteps % 4);
-				sendStepSignalToFrontRight(frontRightSteps % 4);
+				
+				frontRightCounter += -1;
+				backLeftCounter += 1;
+				
+				//Constrain the counters to the step boundaries
+				//Left
+				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+				//Right
+				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+
+				if(millisecond_interval)
+				{
+					singleStep(0, -1, stepWait);
+				}
+				else
+				{
+					singleStep_us(0, -1, stepWait);
+				}
 			}
 		}
 		// Backward Right Strafe
 		else if(forwardDirection == -1 && sidewayDirection == 1)
 		{
+			Serial.print("Backward Right Strafe \n");
 			for(int i = 0; i < steps; i++)
 			{
-				backLeftSteps -= 1;
-				frontRightSteps -= 1;
-				sendStepSignalToBackLeft(backLeftSteps % 4);
-				sendStepSignalToFrontRight(frontRightSteps % 4);
+				
+				frontRightCounter -= -1;
+				backLeftCounter -= 1;
+				
+				//Constrain the counters to the step boundaries
+				//Left
+				
+				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+				//Right
+				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+				
+				if(millisecond_interval)
+				{
+					singleStep(0, -1, stepWait);
+				}
+				else
+				{
+					singleStep_us(0, -1, stepWait);
+				}
 			}
 		}
 	}	
 
-	}
+}
