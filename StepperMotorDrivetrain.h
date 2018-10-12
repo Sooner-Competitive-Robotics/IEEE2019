@@ -22,28 +22,32 @@ class StepperMotorDrivetrain
 {
 	public:
 		StepperMotorDrivetrain();
-
+		
+		//TODO: reorder the methods in cpp to match this order
 		void operator=(const StepperMotorDrivetrain& drivetrain);
 		
+		//initialize motors
 		void initFrontLeft(int in1, int in2, int in3, int in4);
 		void initFrontRight(int in1, int in2, int in3, int in4);
 		void initBackLeft(int in1, int in2, int in3, int in4);
 		void initBackRight(int in1, int in2, int in3, int in4);
 		
+		//movement
 		void step(int left, int right);
-		
-		double calculateStepWait(int steps);
-		
 		void strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual);
-		
+				
+		//setters and resetters
 		void setRPM(float speed);
 		void resetStepCounter();
 		
+		//getters
 		long getFrontLeftSteps();
 		long getBackLeftSteps();
 		long getFrontRightSteps();
 		long getBackRightSteps();
 		
+		//helpers
+		double calculateStepWait(int steps);
 		int convertInchesToSteps(float inches);
 		
 	private:
@@ -71,8 +75,8 @@ class StepperMotorDrivetrain
 		int frontLeftCounter, frontRightCounter, backLeftCounter, backRightCounter;
 		
 		//Stepping functions
-		void singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait);
-		void singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait);
+		void singleStep(unsigned int stepWait);
+		void singleStep_us(unsigned int stepWait);
 		
 		void sendStepSignalToFrontLeft(int stepID);
 		void sendStepSignalToBackLeft(int stepID);

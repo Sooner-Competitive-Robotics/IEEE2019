@@ -21,7 +21,6 @@ StepperMotorDrivetrain::StepperMotorDrivetrain()
 	this->rpm = 25;
 }
 
-//operator overload?
 void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 {
 	//sets private variables from each drivetrain equal to one other
@@ -237,74 +236,25 @@ int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 }
 
 //Private Functions
-void StepperMotorDrivetrain::singleStep(int forwardDirection, int sidewayDirection, unsigned int stepWait)
+void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
 {
-<<<<<<< HEAD
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(forwardDirection == 0 && sidewayDirection != 0)) 
-=======
 	sendStepSignalToFrontLeft(frontLeftCounter % 4);
 	sendStepSignalToFrontRight(frontRightCounter % 4);
 	sendStepSignalToBackLeft(backLeftCounter % 4);
 	sendStepSignalToBackRight(backRightCounter % 4);
 	
-	/*
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0)) 
->>>>>>> 66b4c1107d92aa66ba111543547ce01197220e21
-	{	
-		sendStepSignalToFrontLeft(frontLeftCounter % 4);
-		sendStepSignalToFrontRight(frontRightCounter % 4);
-		sendStepSignalToBackLeft(backLeftCounter % 4);
-		sendStepSignalToBackRight(backRightCounter % 4);
-	}
-	
-	else if(forwardDirection != 0 && sidewayDirection == -1) 
-	{
-		sendStepSignalToFrontLeft(frontLeftCounter % 4);
-		sendStepSignalToBackRight(backRightCounter % 4);
-	}
-	
-	else if(forwardDirection != 0 && sidewayDirection == 1) 
-	{
-		sendStepSignalToBackLeft(frontLeftCounter % 4);
-		sendStepSignalToFrontRight(backRightCounter % 4);
-	}
-	*/	
 	delay(stepWait); // Wait
 }
 
 //same as above but with a different delay function
-void StepperMotorDrivetrain::singleStep_us(int forwardDirection, int sidewayDirection, unsigned int stepWait)
+void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
 {
-<<<<<<< HEAD
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(forwardDirection == 0 && sidewayDirection != 0))
-=======
+
 	sendStepSignalToFrontLeft(frontLeftCounter % 4);
 	sendStepSignalToFrontRight(frontRightCounter % 4);
 	sendStepSignalToBackLeft(backLeftCounter % 4);
 	sendStepSignalToBackRight(backRightCounter % 4);
 	
-	/*
-	if((forwardDirection != 0 && sidewayDirection == 0 )||(sidewayDirection != 0 && forwardDirection == 0))
->>>>>>> 66b4c1107d92aa66ba111543547ce01197220e21
-	{
-		sendStepSignalToFrontLeft(frontLeftCounter % 4);
-		sendStepSignalToFrontRight(frontRightCounter % 4);
-		sendStepSignalToBackLeft(backLeftCounter % 4);
-		sendStepSignalToBackRight(backRightCounter % 4);
-	}
-	
-	else if(forwardDirection != 0 && sidewayDirection == -1) 
-	{
-		sendStepSignalToFrontLeft(frontLeftSteps % 4);
-		sendStepSignalToBackRight(backRightSteps % 4);
-	}
-	
-	else if(forwardDirection != 0 && sidewayDirection == 1) 
-	{
-		sendStepSignalToBackLeft(frontLeftSteps % 4);
-		sendStepSignalToFrontRight(backRightSteps % 4);
-	}
-	*/
     delayMicroseconds(stepWait); // Wait
 }
 
@@ -427,6 +377,7 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
 			break;
     }
 }
+
 /* Pass ints for direction
  * 
  * forwardDirection: 0-->None	1-->Forward		-1-->Backwards
@@ -436,12 +387,11 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
  */
 void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual){
 	
-	bool millisecond_interval = false;
-	
 	//We basically force left and right to be equal here, because they should be.
 	//NO CURVE TURNS ALLOWED (Down with tank steer)
 	int steps = abs(stepsActual);
 			
+	//TODO: delete Step and implement it here (not priority)	
 	// Straight Forward
 	if(forwardDirection == 1 && sidewayDirection == 0)
 	{
@@ -455,10 +405,12 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		step(-steps, -steps);
 	}
 
-	// Non basic movement
+	// Non basic movement (strafing)
 	else 
 	{
+		bool millisecond_interval = false;
 		
+		//Calculating amount of time for function
 		double T = calculateStepWait(steps);
 		
 		//Convert to milliseconds if delay would be greater than 5,000 us.
@@ -474,15 +426,10 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		if(forwardDirection == 0 && sidewayDirection == -1)
 		{
 			Serial.print("Left Strafe \n");
+			
 			for(int i = 0; i < steps; i++)
 			{
-				/*
-				backRightCounter -= 1;
-				frontRightCounter += 1;
-				backLeftCounter += 1;
-				frontLeftCounter -= 1;
-				*/
-				
+				//right motors turn outward, left motors turn inward
 				backRightCounter -= -1;
 				frontRightCounter += -1;
 				backLeftCounter += 1;
@@ -504,11 +451,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				
 				if(millisecond_interval)
 				{
-					singleStep(0, -1, stepWait);
+					singleStep(stepWait);
 				}
 				else
 				{
-					singleStep_us(0, -1, stepWait);
+					singleStep_us(stepWait);
 				}
 			}
 		}
@@ -516,15 +463,10 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		else if(forwardDirection == 0 && sidewayDirection == 1)
 		{
 			Serial.print("Right Strafe \n");
+			
 			for(int i = 0; i < steps; i++)
 			{
-				/*
-				backRightCounter += 1;
-				frontRightCounter -= 1;
-				backLeftCounter -= 1;
-				frontLeftCounter += 1;
-				*/
-				
+				//right motors turn inward, left motors turn outward				
 				backRightCounter += -1;
 				frontRightCounter -= -1;
 				backLeftCounter -= 1;
@@ -546,11 +488,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				
 				if(millisecond_interval)
 				{
-					singleStep(0, -1, stepWait);
+					singleStep(stepWait);
 				}
 				else
 				{
-					singleStep_us(0, 1, stepWait);
+					singleStep_us(stepWait);
 				}
 			}
 		}
@@ -558,9 +500,10 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		else if(forwardDirection == 1 && sidewayDirection == -1)
 		{
 			Serial.print("Forward Left Strafe \n");
+			
 			for(int i = 0; i < steps; i++)
 			{
-				
+				//backright turns forward, frontleft turns forward
 				backRightCounter += -1;
 				frontLeftCounter += 1;
 				
@@ -575,11 +518,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				
 				if(millisecond_interval)
 				{
-					singleStep(0, -1, stepWait);
+					singleStep(stepWait);
 				}
 				else
 				{
-					singleStep_us(0, -1, stepWait);
+					singleStep_us(stepWait);
 				}
 			}
 		}
@@ -587,9 +530,10 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		else if(forwardDirection == -1 && sidewayDirection == -1)
 		{
 			Serial.print("Backward Left Strafe \n");
+			
 			for(int i = 0; i < steps; i++)
 			{
-				
+				//backright turns backward, frontleft turns backward			
 				backRightCounter -= -1;
 				frontLeftCounter -= 1;
 				
@@ -603,11 +547,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				
 				if(millisecond_interval)
 				{
-					singleStep(0, -1, stepWait);
+					singleStep(stepWait);
 				}
 				else
 				{
-					singleStep_us(0, -1, stepWait);
+					singleStep_us(stepWait);
 				}
 			}
 		}
@@ -615,9 +559,10 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		else if(forwardDirection == 1 && sidewayDirection == 1)
 		{
 			Serial.print("Forward Right Strafe \n");
+			
 			for(int i = 0; i < steps; i++)
 			{
-				
+				//frontright turns forward, backright turns forward
 				frontRightCounter += -1;
 				backLeftCounter += 1;
 				
@@ -631,11 +576,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 
 				if(millisecond_interval)
 				{
-					singleStep(0, -1, stepWait);
+					singleStep(stepWait);
 				}
 				else
 				{
-					singleStep_us(0, -1, stepWait);
+					singleStep_us(stepWait);
 				}
 			}
 		}
@@ -643,9 +588,10 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		else if(forwardDirection == -1 && sidewayDirection == 1)
 		{
 			Serial.print("Backward Right Strafe \n");
+			
 			for(int i = 0; i < steps; i++)
 			{
-				
+				//frontright turns backward, backleft turns backward
 				frontRightCounter -= -1;
 				backLeftCounter -= 1;
 				
@@ -660,11 +606,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				
 				if(millisecond_interval)
 				{
-					singleStep(0, -1, stepWait);
+					singleStep(stepWait);
 				}
 				else
 				{
-					singleStep_us(0, -1, stepWait);
+					singleStep_us(stepWait);
 				}
 			}
 		}
