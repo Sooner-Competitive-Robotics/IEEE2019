@@ -173,11 +173,11 @@ void StepperMotorDrivetrain::step(int left, int right)
 
 		if(millisecond_interval)
 		{
-			singleStep(1, 0, stepWait);
+			singleStep(stepWait);
 		}
 		else
 		{
-			singleStep_us(1, 0, stepWait);
+			singleStep_us(stepWait);
 		}
 	}
 }
@@ -430,8 +430,8 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			for(int i = 0; i < steps; i++)
 			{
 				//right motors turn outward, left motors turn inward
-				backRightCounter -= -1;
-				frontRightCounter += -1;
+				backRightCounter -= 1;
+				frontRightCounter += 1;
 				backLeftCounter += 1;
 				frontLeftCounter -= 1;
 				
@@ -467,8 +467,8 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			for(int i = 0; i < steps; i++)
 			{
 				//right motors turn inward, left motors turn outward				
-				backRightCounter += -1;
-				frontRightCounter -= -1;
+				backRightCounter += 1;
+				frontRightCounter -= 1;
 				backLeftCounter -= 1;
 				frontLeftCounter += 1;
 				
@@ -504,17 +504,17 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			for(int i = 0; i < steps; i++)
 			{
 				//backright turns forward, frontleft turns forward
-				backRightCounter += -1;
-				frontLeftCounter += 1;
+				backLeftCounter += 1;
+				frontRightCounter += 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
-				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
-				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
 
 				//Right
-				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
-				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
 				
 				if(millisecond_interval)
 				{
@@ -534,16 +534,16 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			for(int i = 0; i < steps; i++)
 			{
 				//backright turns backward, frontleft turns backward			
-				backRightCounter -= -1;
+				backRightCounter -= 1;
 				frontLeftCounter -= 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
-				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
-				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
-				//Right
 				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
 				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				//Right
+				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
 				
 				if(millisecond_interval)
 				{
@@ -563,16 +563,16 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			for(int i = 0; i < steps; i++)
 			{
 				//frontright turns forward, backright turns forward
-				frontRightCounter += -1;
-				backLeftCounter += 1;
+				frontLeftCounter += 1;
+				backRightCounter += 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
-				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
-				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
 				//Right
-				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
-				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
 
 				if(millisecond_interval)
 				{
@@ -592,17 +592,17 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			for(int i = 0; i < steps; i++)
 			{
 				//frontright turns backward, backleft turns backward
-				frontRightCounter -= -1;
+				frontRightCounter -= 1;
 				backLeftCounter -= 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
 				
-				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
-				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
-				//Right
 				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
 				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+				//Right
+				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
 				
 				if(millisecond_interval)
 				{
@@ -615,5 +615,4 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			}
 		}
 	}	
-
 }
