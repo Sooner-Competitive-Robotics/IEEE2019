@@ -429,6 +429,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			
 			for(int i = 0; i < steps; i++)
 			{
+				Serial.print(i);
 				//right motors turn outward, left motors turn inward
 				backRightCounter -= 1;
 				frontRightCounter += 1;
@@ -439,15 +440,20 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				//Left
 				this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
 				this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+				Serial.print(frontLeftCounter);
 				
 				this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
 				this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+				Serial.print(backLeftCounter);
+				
 				//Right
 				this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
 				this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+				Serial.print(frontRightCounter);
 				
 				this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
 				this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+				Serial.print(backRightCounter);
 				
 				if(millisecond_interval)
 				{
