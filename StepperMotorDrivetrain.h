@@ -35,6 +35,7 @@ class StepperMotorDrivetrain
 		//movement
 		void step(int left, int right);
 		void strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual);
+		bool stepToAngle(float target, float current);
 				
 		//setters and resetters
 		void setRPM(float speed);
@@ -82,6 +83,7 @@ class StepperMotorDrivetrain
 		void sendStepSignalToBackLeft(int stepID);
 		void sendStepSignalToFrontRight(int stepID);
 		void sendStepSignalToBackRight(int stepID);
+		bool inRange(float variable, float constant, float range);
 
 };
 

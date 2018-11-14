@@ -182,6 +182,53 @@ void StepperMotorDrivetrain::step(int left, int right)
 	}
 }
 
+bool StepperMotorDrivetrain::stepToAngle(float target, float current)
+{
+	if (target > 0)
+	{
+		if (inRange(target, current, ANGLETHRESHOLD))
+		{
+			step(0, 0);
+			return true;
+		}
+		else
+		{
+			if (current < target) 
+			{
+				step(-1, 1);
+				return false;
+			}
+			else
+			{
+				step(1, -1);
+				return false;
+			}
+		}
+
+	}
+	else //(target < 0)
+	{
+		if (inRange(target, current, ANGLETHRESHOLD))
+		{
+			step(0, 0);
+			return true;
+		}
+		else
+		{
+			if (current > target)
+			{
+				step(1, -1);
+				return false;
+			}
+			else
+			{
+				step(-1, 1);
+				return false;
+			}
+		}
+	}
+}
+
 //calculate the amount of time the amount of steps will take
 double StepperMotorDrivetrain::calculateStepWait(int steps) {
 
@@ -620,5 +667,17 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 				}
 			}
 		}
-	}	
+	}
+	
+	bool StepperMotorDrivetrain::inRange(float variable, float constant, float range)
+	{
+		if (abs(variable - constant) < range )
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}		
+	}
 }
