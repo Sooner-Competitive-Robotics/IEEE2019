@@ -247,8 +247,6 @@ void StepperMotorDrivetrain::resetStepCounter()
 	frontRightSteps = 0;
 	backLeftSteps = 0;
 	backRightSteps = 0;
-	
-	
 }
 
 //getter method for left motor steps
