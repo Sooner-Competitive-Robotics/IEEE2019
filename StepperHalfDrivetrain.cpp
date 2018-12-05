@@ -1,7 +1,8 @@
 #include "StepperHalfDrivetrain.h"
 #include <String.h>
 
-StepperHalfDrivetrain::StepperHalfDrivetrain() {
+StepperHalfDrivetrain::StepperHalfDrivetrain() 
+{
 	this->frontSteps = 0;
 	this->frontCounter = 0;
 	
@@ -11,7 +12,8 @@ StepperHalfDrivetrain::StepperHalfDrivetrain() {
 	this->rpm = 25;
 }
 
-void StepperHalfDrivetrain::operator=(const StepperHalfDrivetrain& drivetrain) {
+void StepperHalfDrivetrain::operator=(const StepperHalfDrivetrain& drivetrain) 
+{
 	this->frontIN1 = drivetrain.frontIN1;
 	this->frontIN2 = drivetrain.frontIN2;
 	this->frontIN3 = drivetrain.frontIN3;
@@ -28,7 +30,8 @@ void StepperHalfDrivetrain::operator=(const StepperHalfDrivetrain& drivetrain) {
 	this->backCounter = drivetrain.backCounter;
 }
 
-void StepperHalfDrivetrain::initFront(int in1, int in2, int in3, int in4) {
+void StepperHalfDrivetrain::initFront(int in1, int in2, int in3, int in4) 
+{
 	this->frontIN1 = in1;
 	this->frontIN2 = in2;
 	this->frontIN3 = in3;
@@ -40,7 +43,8 @@ void StepperHalfDrivetrain::initFront(int in1, int in2, int in3, int in4) {
 	pinMode(in4, OUTPUT);
 }
 
-void StepperHalfDrivetrain::initBack(int in1, int in2, int in3, int in4) {
+void StepperHalfDrivetrain::initBack(int in1, int in2, int in3, int in4) 
+{
 	this->backIN1 = in1;
 	this->backIN2 = in2;
 	this->backIN3 = in3;
@@ -52,7 +56,7 @@ void StepperHalfDrivetrain::initBack(int in1, int in2, int in3, int in4) {
 	pinMode(in4, OUTPUT);
 }
 
-//moves the drivetrain
+// Moves the drivetrain
 void StepperMotorDrivetrain::step(int front, int back)
 {
 	bool millisecond_interval = false;
@@ -103,17 +107,18 @@ void StepperMotorDrivetrain::step(int front, int back)
 
 
 //calculate the amount of time the amount of steps will take
-double StepperMotorDrivetrain::calculateStepWait(int steps) {
+double StepperMotorDrivetrain::calculateStepWait(int steps) 
+{
 
 	//Determine how many microseconds we want to wait, and convert to an integer	
 	double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
 	double T = (totalTime / steps) / 2;
 	
-	
 	return T;
 }
 
-void StepperHalfDrivetrain::setRPM(float speed) {
+void StepperHalfDrivetrain::setRPM(float speed) 
+{
 	this->rpm = abs(speed);
 }
 
@@ -149,7 +154,8 @@ void StepperMotorDrivetrain::sendStepSignalToFront(int stepID)
 
 void StepperMotorDrivetrain::sendStepSignalToBack(int stepID)
 {
-	switch (stepID) {
+	switch (stepID) 
+	{
 		case 0:  // 1010
 			digitalWrite(backIN1, HIGH);
 			digitalWrite(backIN2, LOW);
