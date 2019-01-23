@@ -5,6 +5,7 @@
 #include <String.h>
 
 #define STEPS_PER_REVOLUTION 200
+#define ANGLETHRESHOLD 0
 
 /*
  * (Taken from Arduino Stepper.h)

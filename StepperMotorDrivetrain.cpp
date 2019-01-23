@@ -430,7 +430,8 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
  *
  * Use drivetrain.convertInchesToSteps(inches) in your .ino for steps
  */
-void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual){
+void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual)
+{
 	
 	//We basically force left and right to be equal here, because they should be.
 	//NO CURVE TURNS ALLOWED (Down with tank steer)
@@ -666,16 +667,17 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			}
 		}
 	}
-	
-	bool StepperMotorDrivetrain::inRange(float variable, float constant, float range)
-	{
-		if (abs(variable - constant) < range )
-		{
-			return true;
-		}
-		else 
-		{
-			return false;
-		}		
-	}
 }
+
+bool StepperMotorDrivetrain::inRange(float variable, float constant, float range)
+{
+	if (abs(variable - constant) < range )
+	{
+		return true;
+	}
+	else 
+	{
+		return false;
+	}		
+}
+
