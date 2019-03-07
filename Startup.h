@@ -13,7 +13,7 @@ void checkSettings();
 const int MPU_addr=0x68;  // I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
-void gyroInterrupt()
+void updateGyro()
 {
 	Vector rawGyro = mpu.readRawGyro();
 	Vector normGyro = mpu.readNormalizeGyro();
@@ -31,6 +31,11 @@ void gyroInterrupt()
 	Serial.print(normGyro.YAxis);
 	Serial.print(" Znorm = ");
 	Serial.println(normGyro.ZAxis);
+	
+	//GYRO_PITCH = rawGyro.XAxis
+	//GYRO_YAW = rawGyro.YAxis
+	//GYRO_ROLL = rawGyro.ZAxis
+
 }
 
 void robotSetup() 
@@ -50,14 +55,14 @@ void robotSetup()
 	drivetrain.initBackRight(BACK_RIGHT_MOT_PIN1, BACK_RIGHT_MOT_PIN2, BACK_RIGHT_MOT_PIN3, BACK_RIGHT_MOT_PIN4);
 	drivetrain.setRPM(25);
 	
-	//attachInterrupt(pinToInterrupt(0), gyroInterrupt, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(0), updateGyro, CHANGE);
 	
 	// Initialize MPU6050
 	Serial.println("Initialize MPU6050");
 	while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
 	{
-	Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
-	delay(500);
+		Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
+		delay(500);
 	}
 
 	// If you want, you can set gyroscope offsets
@@ -76,7 +81,6 @@ void robotSetup()
 	// Check settings
 	checkSettings();
 	
-	//attachInterrupt(digitalPinToInterrupt(1), gyroInterrupt, CHANGE);
 }
 
 void checkSettings()
