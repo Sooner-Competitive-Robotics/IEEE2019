@@ -21,5 +21,8 @@
 #define BACK_RIGHT_MOT_PIN3 A2
 #define BACK_RIGHT_MOT_PIN4 A3
 
+#define GYRO_PITCH 0
+#define GYRO_ROLL 0
+#define GYRO_YAW 0
 
 #endif

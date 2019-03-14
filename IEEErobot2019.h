@@ -5,5 +5,6 @@
 //#include "StepperHalfDrivetrain.h"
 #include "Globals.h"
 #include "Startup.h"
+#include "MPU6050.h"
 
 #endif
