@@ -669,6 +669,18 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	}
 }
 
+/*
+boolPIDdrive(float targetDistance, float targetAngle, float currentAngle)
+{;
+	float currentSteps = 0;
+	
+	while(currentSteps < targetDistance)
+	{
+		strafe(1,0,);
+	}
+}
+*/
+
 bool StepperMotorDrivetrain::inRange(float variable, float constant, float range)
 {
 	if (abs(variable - constant) < range )

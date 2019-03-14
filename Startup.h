@@ -2,6 +2,7 @@
 #define STARTUP_H
 
 #include "MPU6050.h"
+#include "Globals.h"
 
 StepperMotorDrivetrain drivetrain;
 //SteeperHalfDrivetrain drivetrain;
@@ -32,9 +33,9 @@ void updateGyro()
 	Serial.print(" Znorm = ");
 	Serial.println(normGyro.ZAxis);
 	
-	//GYRO_PITCH = rawGyro.XAxis
-	//GYRO_YAW = rawGyro.YAxis
-	//GYRO_ROLL = rawGyro.ZAxis
+	GYRO_PITCH = rawGyro.XAxis;
+	GYRO_YAW = rawGyro.YAxis;
+	GYRO_ROLL = rawGyro.ZAxis;
 
 }
 
@@ -119,6 +120,45 @@ void checkSettings()
 	Serial.println(mpu.getGyroOffsetZ());
 
 	Serial.println();
+}
+
+bool smartDrive(float targetDistance, float targetAngle)
+{
+	float currSteps = 0;
+	//float currAngle = GYRO_PITCH; // Get angle
+	
+	while(currSteps < targetDistance)
+	{
+		if(abs(GYRO_PITCH - targetAngle) < GYRO_THRESHOLD)
+		{
+			if(GYRO_PITCH > targetAngle)
+			{
+				drivetrain.strafe(0,-1,1);
+			}
+			else if (GYRO_PITCH < targetAngle)
+			{
+				drivetrain.strafe(0,1,1);
+			}
+		}
+		else 
+		{
+			if(targetDistance > 0)
+			{
+				drivetrain.strafe(1,0,1);
+			
+				currSteps++;
+			}
+			else if (targetDistance < 0)
+			{
+				drivetrain.strafe(-1,0,1);
+			
+				currSteps++;
+			}
+		}
+		
+	}	
+	
+	return true;
 }
 
 #endif

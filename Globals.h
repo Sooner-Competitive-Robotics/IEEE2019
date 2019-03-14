@@ -21,8 +21,10 @@
 #define BACK_RIGHT_MOT_PIN3 A2
 #define BACK_RIGHT_MOT_PIN4 A3
 
-#define GYRO_PITCH 0
-#define GYRO_ROLL 0
-#define GYRO_YAW 0
+#define GYRO_THRESHOLD 2
+
+float GYRO_PITCH;
+float GYRO_ROLL;
+float GYRO_YAW;
 
 #endif

@@ -37,6 +37,7 @@ class StepperMotorDrivetrain
 		void step(int left, int right);
 		void strafe(int forwardDirection, int sidewayDirection, unsigned int stepsActual);
 		bool stepToAngle(float target, float current);
+		//bool PIDdrive(float targetDistance, float targetAngle, float currentAngle); 
 				
 		//setters and resetters
 		void setRPM(float speed);
