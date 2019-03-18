@@ -30,6 +30,6 @@ class Arm
 		DigitalDevice lowSwitch;
 		DigitalDevice highSwitch;
 	
-}
+};
 
 #endif
