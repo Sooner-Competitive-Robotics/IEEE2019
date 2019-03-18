@@ -27,4 +27,14 @@ float GYRO_PITCH;
 float GYRO_ROLL;
 float GYRO_YAW;
 
+#define ARM_MOT_PIN1 6
+#define ARM_MOT_PIN2 7
+
+#define WRIST_PIN1 4
+
+#define FIST_PIN1 5
+
+#define LOW_SWITCH 0
+#define HIGH_SWITCH 0
+
 #endif

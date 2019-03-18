@@ -3,6 +3,7 @@
 
 #include <Servo.h>
 #include "Motor.h"
+#include "DigitalDevice.h"
 
 class Arm
 {
@@ -10,20 +11,25 @@ class Arm
 	
 		Arm();
 
-		Arm(Servo _claw, Servo _rotator, MotorController _pinion);
+		void begin(Servo& _fist, Servo& _wrist, Motor& _pinion, DigitalDevice& _lowSwitch, DigitalDevice& _highSwitch);
 	
-		void moveClaw(int length);
+		void moveFist(int length);
 		
-		void moveRotator(int length);
+		void moveWrist(int length);
 		
-		void movePinion(); // Using limit switches probably
+		int movePinion(int switchEnd); // Using limit switches probably
 		
 	private:
 		
-		Servo claw;
+		Servo fist;
 		
-		Servo rotator;
+		Servo wrist;
 		
-		MotorController pinion;
+		Motor pinion;
+		
+		DigitalDevice lowSwitch;
+		DigitalDevice highSwitch;
 	
 }
+
+#endif

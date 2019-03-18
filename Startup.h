@@ -3,11 +3,22 @@
 
 #include "MPU6050.h"
 #include "Globals.h"
+#include <Servo.h>
+#include "Arm.h"
+#include "StepperMotorDrivetrain.h"
 
 StepperMotorDrivetrain drivetrain;
-//SteeperHalfDrivetrain drivetrain;
 
 MPU6050 mpu;
+
+Arm arm;
+
+Servo fistServo;
+Servo wristServo;
+Motor rackAndPinion;
+
+DigitalDevice lowSwitch(LOW_SWITCH, INPUT);
+DigitalDevice highSwitch(HIGH_SWITCH, INPUT);
 
 void checkSettings();
 
@@ -40,7 +51,17 @@ void updateGyro()
 }
 
 void robotSetup() 
-{
+{	
+	fistServo.attach(FIST_PIN1);
+	wristServo.attach(WRIST_PIN1);
+	
+	lowSwitch.pullUp();
+	highSwitch.pullUp();
+	
+	rackAndPinion.begin(ARM_MOT_PIN1, ARM_MOT_PIN2);
+	
+	arm.begin(fistServo, wristServo, rackAndPinion, lowSwitch, highSwitch);
+	
 	Serial.println("Initialize MPU6050");
 	/*while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
 	{
@@ -123,6 +144,7 @@ void checkSettings()
 	Serial.println();
 }
 
+/*
 bool smartDrive(float targetDistance, float targetAngle)
 {
 	float currSteps = 0;
@@ -161,5 +183,7 @@ bool smartDrive(float targetDistance, float targetAngle)
 	
 	return true;
 }
+*/
+
 
 #endif

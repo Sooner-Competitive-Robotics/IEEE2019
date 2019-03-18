@@ -6,5 +6,6 @@
 #include "Globals.h"
 #include "Startup.h"
 #include "MPU6050.h"
+#include "Arm.h"
 
 #endif
