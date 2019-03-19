@@ -236,7 +236,6 @@ double StepperMotorDrivetrain::calculateStepWait(int steps) {
 	double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
 	double T = (totalTime / steps) / 2;
 	
-	
 	return T;
 }
 
@@ -475,11 +474,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			
 			for(int i = 0; i < steps; i++)
 			{
-				//right motors turn outward, left motors turn inward
-				backRightCounter -= 1;
-				frontRightCounter += 1;
-				backLeftCounter += 1;
-				frontLeftCounter -= 1;
+				//right motors turn inward, left motors turn outward				
+				backRightCounter += 1;
+				frontRightCounter -= 1;
+				backLeftCounter -= 1;
+				frontLeftCounter += 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
@@ -513,11 +512,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			
 			for(int i = 0; i < steps; i++)
 			{
-				//right motors turn inward, left motors turn outward				
-				backRightCounter += 1;
-				frontRightCounter -= 1;
-				backLeftCounter -= 1;
-				frontLeftCounter += 1;
+				//right motors turn outward, left motors turn inward
+				backRightCounter -= 1;
+				frontRightCounter += 1;
+				backLeftCounter += 1;
+				frontLeftCounter -= 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
