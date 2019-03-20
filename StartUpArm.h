@@ -1,7 +1,13 @@
 #ifndef STARTUPARM_H
 #define STARTUPARM_H
 
-#include "IEEErobot2019.h"
+#include "StepperMotorDrivetrain.h"
+#include "Globals.h"
+#include "StartUpDrive.h"
+#include "StartUpArm.h"
+#include "MPU6050.h"
+#include "Arm.h"
+#include <Servo.h>
 
 Arm arm;
 

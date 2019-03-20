@@ -29,6 +29,10 @@ class Arm
 		
 		int getPinionPos();
 		
+		int getFistAngle();
+		
+		int getWristAngle();
+		
 	private:
 		
 		Servo fist;
