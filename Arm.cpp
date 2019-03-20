@@ -1,5 +1,11 @@
 #include "Arm.h"
 
+/* initial position of arm:
+ * pinion is fully retracted
+ * fist is closedir
+ * wrist is bent (claw is down)
+ */
+ 
 Arm::Arm()
 {
 	
@@ -14,16 +20,29 @@ void Arm::begin(Servo& _fist, Servo& _wrist, Motor& _pinion, DigitalDevice& _low
 	highSwitch = _highSwitch;
 }
 
-//TODO: test angles for open and close and put in Globals
-void Arm::moveFist(int length)
+//reset arm to initial positions
+void Arm::reset()
 {
-	fist.write(length);
+	fist.write(0 - fistAngle);
+	wrist.write(0 - wristAngle);
+	movePinion(-1);
+	
+	fistAngle = 0;
+	wristAngle = 0;
+}
+
+//TODO: test angles for open and close and put in Globals
+void Arm::moveFist(int angle)
+{
+	fist.write(angle);
+	fistAngle += angle;
 }
 
 //TODO: test angles for up and down and put in Globals
-void Arm::moveWrist(int length)
+void Arm::moveWrist(int angle)
 {
-	wrist.write(length);
+	wrist.write(angle);
+	wristAngle += angle;
 }
 
 /*	
@@ -46,7 +65,7 @@ int Arm::movePinion(int switchEnd) // Using limit switches
 		}
 	}
 	
-	if (switchEnd == 0)
+	if (switchEnd == -1)
 	{
 		if (lowSwitch.read() == HIGH)
 		{
@@ -75,6 +94,16 @@ int Arm::getPinionPos()
 	{
 		return 0;
 	}
+}
+
+int Arm::getFistAngle()
+{
+	return fistAngle;
+}
+
+int Arm::getWristAngle()
+{
+	return wristAngle;
 }
 
 

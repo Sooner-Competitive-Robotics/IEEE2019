@@ -5,6 +5,12 @@
 #include "Motor.h"
 #include "DigitalDevice.h"
 
+/* initial position of arm:
+ * pinion is fully retracted
+ * fist is closedir
+ * wrist is bent (claw is down)
+ */
+
 class Arm
 {
 	public:
@@ -13,6 +19,8 @@ class Arm
 
 		void begin(Servo& _fist, Servo& _wrist, Motor& _pinion, DigitalDevice& _lowSwitch, DigitalDevice& _highSwitch);
 	
+		void reset();
+		
 		void moveFist(int length);
 		
 		void moveWrist(int length);
@@ -31,6 +39,10 @@ class Arm
 		
 		DigitalDevice lowSwitch;
 		DigitalDevice highSwitch;
+		
+		//angle where servos at
+		int wristAngle = 0;
+		int fistAngle = 0;
 			
 };
 
