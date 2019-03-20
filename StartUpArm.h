@@ -75,7 +75,7 @@ void updateGyro()
 
 }
 */
-void robotSetup() 
+void armSetup() 
 {	
 	DigitalDevice lowSwitch(LOW_SWITCH, INPUT);
 	DigitalDevice highSwitch(HIGH_SWITCH, INPUT);

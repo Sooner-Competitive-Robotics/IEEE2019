@@ -73,7 +73,7 @@ void updateGyro()
 
 }
 
-void robotSetup() 
+void driveSetup() 
 {	
 	DigitalDevice lowSwitch(LOW_SWITCH, INPUT);
 	DigitalDevice highSwitch(HIGH_SWITCH, INPUT);
