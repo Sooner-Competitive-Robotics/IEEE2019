@@ -230,6 +230,7 @@ bool StepperMotorDrivetrain::stepToAngle(float target, float current)
 }
 
 //calculate the amount of time the amount of steps will take
+// Returns time in microseconds
 double StepperMotorDrivetrain::calculateStepWait(int steps) {
 
 	//Determine how many microseconds we want to wait, and convert to an integer	
