@@ -5,11 +5,8 @@ from time import sleep
 from picamera import PiCamera
 import RPi.GPIO as GPIO
 
+camera = PiCamera()
+camera.resolution = (1000, 1000)
+camera.rotation = 180
 
-def start():
-	camera = PiCamera()
-	camera.resolution = (1000, 1000)
-	camera.rotation = 180
-
-
-	start_button = Button(start_button_pin)
+start_button = Button(start_button_pin)

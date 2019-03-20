@@ -1,21 +1,11 @@
-#ifndef STARTUP_H
-#define STARTUP_H
+#ifndef STARTUPDRIVE_H
+#define STARTUPDRIVE_H
 
-#include "MPU6050.h"
-#include "Globals.h"
-#include <Servo.h>
-#include "Arm.h"
-#include "StepperMotorDrivetrain.h"
+#include "IEEErobot2019.h"
 
 StepperMotorDrivetrain drivetrain;
 
 MPU6050 mpu;
-
-Arm arm;
-
-Servo fistServo;
-Servo wristServo;
-Motor rackAndPinion;
 
 const int MPU_addr = 0x68;  // I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
@@ -117,7 +107,7 @@ void robotSetup()
 	attachInterrupt(digitalPinToInterrupt(0), updateGyro, CHANGE);
 	
 	// Initialize MPU6050
-	Serial.println("Initialize MPU6050");
+	//Serial.println("Initialize MPU6050");
 	/*while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
 	{
 		Serial.println("Could not find a valid MPU6050 sensor, check wiring!");

@@ -19,6 +19,8 @@ class Arm
 		
 		int movePinion(int switchEnd); // Using limit switches probably
 		
+		int getPinionPos();
+		
 	private:
 		
 		Servo fist;
@@ -29,7 +31,7 @@ class Arm
 		
 		DigitalDevice lowSwitch;
 		DigitalDevice highSwitch;
-	
+			
 };
 
 #endif
