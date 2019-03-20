@@ -276,7 +276,7 @@ long StepperMotorDrivetrain::getBackRightSteps()
 int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 {
 	//number of steps / circumference of wheel = ratio
-	return static_cast<int>((STEPS_PER_REVOLUTION/(2.875*3.141592653589))*inches);
+	return static_cast<int>((STEPS_PER_REVOLUTION/(4.0*3.141592653589))*inches);
 }
 
 //Private Functions
