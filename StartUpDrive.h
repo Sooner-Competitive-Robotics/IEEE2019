@@ -81,6 +81,7 @@ void updateGyro()
 
 void driveSetup() 
 {	
+	/*
 	DigitalDevice lowSwitch(LOW_SWITCH, INPUT);
 	DigitalDevice highSwitch(HIGH_SWITCH, INPUT);
 
@@ -93,6 +94,7 @@ void driveSetup()
 	rackAndPinion.begin(ARM_MOT_PIN1, ARM_MOT_PIN2);
 	
 	arm.begin(fistServo, wristServo, rackAndPinion, lowSwitch, highSwitch);
+	*/
 	
 	Serial.println("Initialize MPU6050");
 	mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);

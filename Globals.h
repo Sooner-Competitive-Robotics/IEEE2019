@@ -1,6 +1,8 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+// 191 steps / foot (forwards and backwards)
+
 #define FRONT_LEFT_MOT_PIN1 2
 #define FRONT_LEFT_MOT_PIN2 3
 #define FRONT_LEFT_MOT_PIN3 4
@@ -34,7 +36,7 @@ float GYRO_YAW;
 
 #define FIST_PIN1 5
 
-#define LOW_SWITCH 0
-#define HIGH_SWITCH 0
+#define LOW_SWITCH 8
+#define HIGH_SWITCH 9
 
 #endif
