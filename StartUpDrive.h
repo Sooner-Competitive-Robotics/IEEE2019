@@ -42,7 +42,7 @@ void checkSettings()
 		case MPU6050_SCALE_1000DPS:        Serial.println("1000 dps"); break;
 		case MPU6050_SCALE_500DPS:         Serial.println("500 dps"); break;
 		case MPU6050_SCALE_250DPS:         Serial.println("250 dps"); break;
-	} 
+	}
 
 	Serial.print(" * Gyroscope offsets: ");
 	Serial.print(mpu.getGyroOffsetX());
@@ -72,30 +72,30 @@ void updateGyro()
 	Serial.print(normGyro.YAxis);
 	Serial.print(" Znorm = ");
 	Serial.println(normGyro.ZAxis);
-	
+
 	GYRO_PITCH = rawGyro.XAxis;
 	GYRO_YAW = rawGyro.YAxis;
 	GYRO_ROLL = rawGyro.ZAxis;
 
 }
 
-void driveSetup() 
-{	
+void driveSetup()
+{
 	/*
 	DigitalDevice lowSwitch(LOW_SWITCH, INPUT);
 	DigitalDevice highSwitch(HIGH_SWITCH, INPUT);
 
 	fistServo.attach(FIST_PIN1);
 	wristServo.attach(WRIST_PIN1);
-	
+
 	lowSwitch.pullUp();
 	highSwitch.pullUp();
-	
+
 	rackAndPinion.begin(ARM_MOT_PIN1, ARM_MOT_PIN2);
-	
+
 	arm.begin(fistServo, wristServo, rackAndPinion, lowSwitch, highSwitch);
 	*/
-	
+
 	Serial.println("Initialize MPU6050");
 	mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);
 	/*while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
@@ -103,7 +103,7 @@ void driveSetup()
 		Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
 		delay(500);
 	}*/
-	
+
 	Serial.begin(115200);
 
 	drivetrain.initFrontLeft(FRONT_LEFT_MOT_PIN1, FRONT_LEFT_MOT_PIN2, FRONT_LEFT_MOT_PIN3, FRONT_LEFT_MOT_PIN4);
@@ -111,9 +111,9 @@ void driveSetup()
 	drivetrain.initFrontRight(FRONT_RIGHT_MOT_PIN1, FRONT_RIGHT_MOT_PIN2, FRONT_RIGHT_MOT_PIN3, FRONT_RIGHT_MOT_PIN4);
 	drivetrain.initBackRight(BACK_RIGHT_MOT_PIN1, BACK_RIGHT_MOT_PIN2, BACK_RIGHT_MOT_PIN3, BACK_RIGHT_MOT_PIN4);
 	drivetrain.setRPM(25);
-	
-	attachInterrupt(digitalPinToInterrupt(0), updateGyro, CHANGE);
-	
+
+	//attachInterrupt(digitalPinToInterrupt(0), updateGyro, CHANGE);
+
 	// Initialize MPU6050
 	//Serial.println("Initialize MPU6050");
 	/*while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
@@ -131,14 +131,14 @@ void driveSetup()
 	// If you don't want calibrate, comment this line.
 	//mpu.calibrateGyro();
 
-	// Set threshold sensivty. Default 3.
+	// Set threshold sensitivity. Default 3.
 	// If you don't want use threshold, comment this line or set 0.
 	//mpu.setThreshold(3);
-	
+
 
 	// Check settings
 	//checkSettings();
-	
+
 }
 
 /*
@@ -146,7 +146,7 @@ bool smartDrive(float targetDistance, float targetAngle)
 {
 	float currSteps = 0;
 	//float currAngle = GYRO_PITCH; // Get angle
-	
+
 	while(currSteps < targetDistance)
 	{
 		if(abs(GYRO_PITCH - targetAngle) < GYRO_THRESHOLD)
@@ -160,24 +160,24 @@ bool smartDrive(float targetDistance, float targetAngle)
 				drivetrain.strafe(0,1,1);
 			}
 		}
-		else 
+		else
 		{
 			if(targetDistance > 0)
 			{
 				drivetrain.strafe(1,0,1);
-			
+
 				currSteps++;
 			}
 			else if (targetDistance < 0)
 			{
 				drivetrain.strafe(-1,0,1);
-			
+
 				currSteps++;
 			}
 		}
-		
-	}	
-	
+
+	}
+
 	return true;
 }
 */
