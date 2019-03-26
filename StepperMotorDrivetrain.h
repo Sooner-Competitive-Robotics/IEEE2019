@@ -86,7 +86,6 @@ class StepperMotorDrivetrain
 		void sendStepSignalToFrontRight(int stepID);
 		void sendStepSignalToBackRight(int stepID);
 		bool inRange(float variable, float constant, float range);
-
 };
 
 #endif

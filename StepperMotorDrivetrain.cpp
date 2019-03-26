@@ -441,13 +441,13 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 	// Straight Forward
 	if(forwardDirection == 1 && sidewayDirection == 0)
 	{
-		Serial.print("Forward Strafe \n");
+		Serial.println("Forward Strafe");
 		step(steps, steps);
 	}
 	// Straight Backwards
 	else if(forwardDirection == -1 && sidewayDirection == 0)
 	{
-		Serial.print("Backward Strafe \n");
+		Serial.println("Backward Strafe");
 		step(-steps, -steps);
 	}
 
@@ -471,7 +471,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Left Strafe
 		if(forwardDirection == 0 && sidewayDirection == -1)
 		{
-			Serial.print("Left Strafe \n");
+			Serial.println("Left Strafe");
 			
 			for(int i = 0; i < steps; i++)
 			{
@@ -509,7 +509,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Right Strafe
 		else if(forwardDirection == 0 && sidewayDirection == 1)
 		{
-			Serial.print("Right Strafe \n");
+			Serial.println("Right Strafe");
 			
 			for(int i = 0; i < steps; i++)
 			{
@@ -547,7 +547,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Forward Left Strafe
 		else if(forwardDirection == 1 && sidewayDirection == -1)
 		{
-			Serial.print("Forward Left Strafe \n");
+			Serial.println("Forward Left Strafe");
 			
 			for(int i = 0; i < steps; i++)
 			{				
@@ -577,7 +577,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Backward Left Strafe 
 		else if(forwardDirection == -1 && sidewayDirection == -1)
 		{
-			Serial.print("Backward Left Strafe \n");
+			Serial.println("Backward Left Strafe");
 			
 			for(int i = 0; i < steps; i++)
 			{
@@ -609,7 +609,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Forward Right Strafe
 		else if(forwardDirection == 1 && sidewayDirection == 1)
 		{
-			Serial.print("Forward Right Strafe \n");
+			Serial.println("Forward Right Strafe");
 			
 			for(int i = 0; i < steps; i++)
 			{
@@ -639,7 +639,7 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 		// Backward Right Strafe
 		else if(forwardDirection == -1 && sidewayDirection == 1)
 		{
-			Serial.print("Backward Right Strafe \n");
+			Serial.println("Backward Right Strafe");
 			
 			for(int i = 0; i < steps; i++)
 			{				
