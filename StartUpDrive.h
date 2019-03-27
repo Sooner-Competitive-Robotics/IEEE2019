@@ -56,27 +56,25 @@ void checkSettings()
 
 void updateGyro()
 {
-	Vector rawGyro = mpu.readRawGyro();
-	Vector normGyro = mpu.readNormalizeGyro();
+	// Read normalized values
+	Vector norm = mpu.readNormalizeGyro();
 
-	Serial.print(" Xraw = ");
-	Serial.print(rawGyro.XAxis);
-	Serial.print(" Yraw = ");
-	Serial.print(rawGyro.YAxis);
-	Serial.print(" Zraw = ");
-	Serial.println(rawGyro.ZAxis);
+	// Calculate Pitch, Roll and Yaw
+	float pitch = pitch + norm.YAxis * timeStep;
+	float roll = roll + norm.XAxis * timeStep;
+	float yaw = yaw + norm.ZAxis * timeStep;
 
-	Serial.print(" Xnorm = ");
-	Serial.print(normGyro.XAxis);
-	Serial.print(" Ynorm = ");
-	Serial.print(normGyro.YAxis);
-	Serial.print(" Znorm = ");
-	Serial.println(normGyro.ZAxis);
+	// Output raw
+	Serial.print(" Pitch = ");
+	Serial.print(pitch);
+	Serial.print(" Roll = ");
+	Serial.print(roll);  
+	Serial.print(" Yaw = ");
+	Serial.println(yaw);
 
-	GYRO_PITCH = rawGyro.XAxis;
-	GYRO_YAW = rawGyro.YAxis;
-	GYRO_ROLL = rawGyro.ZAxis;
-
+	GYRO_PITCH = pitch;
+	GYRO_YAW = yaw;
+	GYRO_ROLL = -roll;
 }
 
 void driveSetup()
@@ -112,15 +110,7 @@ void driveSetup()
 	drivetrain.initBackRight(BACK_RIGHT_MOT_PIN1, BACK_RIGHT_MOT_PIN2, BACK_RIGHT_MOT_PIN3, BACK_RIGHT_MOT_PIN4);
 	drivetrain.setRPM(25);
 
-	//attachInterrupt(digitalPinToInterrupt(0), updateGyro, CHANGE);
-
-	// Initialize MPU6050
-	//Serial.println("Initialize MPU6050");
-	/*while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
-	{
-		Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
-		delay(500);
-	}*/
+	attachInterrupt(digitalPinToInterrupt(2), updateGyro, CHANGE);
 
 	// If you want, you can set gyroscope offsets
 	// mpu.setGyroOffsetX(155);
@@ -129,7 +119,7 @@ void driveSetup()
 
 	// Calibrate gyroscope. The calibration must be at rest.
 	// If you don't want calibrate, comment this line.
-	//mpu.calibrateGyro();
+	mpu.calibrateGyro();
 
 	// Set threshold sensitivity. Default 3.
 	// If you don't want use threshold, comment this line or set 0.
@@ -188,13 +178,13 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	{
 		while(currSteps < targetDistance)
 		{
-			if(abs(GYRO_PITCH) < GYRO_THRESHOLD)
+			if(abs(GYRO_ROLL) < GYRO_THRESHOLD)
 			{
-				if(GYRO_PITCH > 0)
+				if(GYRO_ROLL > 0)
 				{
 					drivetrain.strafe(0,-1,1);
 				}
-				else if (GYRO_PITCH < 0)
+				else if (GYRO_ROLL < 0)
 				{
 					drivetrain.strafe(0,1,1);
 				}
@@ -209,7 +199,7 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	}
 	else
 	{
-		while (abs(GYRO_PITCH - _angle) < GYRO_THRESHOLD)
+		while (abs(GYRO_ROLL - _angle) < GYRO_THRESHOLD)
 		{
 			if (_angle > 0)
 			{
