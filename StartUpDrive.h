@@ -141,46 +141,90 @@ void driveSetup()
 
 }
 
-/*
-bool smartDrive(float targetDistance, float targetAngle)
+
+bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 {
-	float currSteps = 0;
-	//float currAngle = GYRO_PITCH; // Get angle
-
-	while(currSteps < targetDistance)
+	
+	int currSteps = 0;
+	
+	int _forward = 0;
+	
+	if (forward > 127) 
 	{
-		if(abs(GYRO_PITCH - targetAngle) < GYRO_THRESHOLD)
-		{
-			if(GYRO_PITCH > targetAngle)
-			{
-				drivetrain.strafe(0,-1,1);
-			}
-			else if (GYRO_PITCH < targetAngle)
-			{
-				drivetrain.strafe(0,1,1);
-			}
-		}
-		else
-		{
-			if(targetDistance > 0)
-			{
-				drivetrain.strafe(1,0,1);
-
-				currSteps++;
-			}
-			else if (targetDistance < 0)
-			{
-				drivetrain.strafe(-1,0,1);
-
-				currSteps++;
-			}
-		}
-
+		_forward = -1;
 	}
+	else if (forward > 0) 
+	{
+		_forward = 1;
+	}
+	
+	int _sideways = 0;
+	
+	if (sideways > 127)
+	{
+		_sideways = -1;
+	}
+	else if (sideways > 0) 
+	{
+		_sideways = 1;
+	}
+	
+	int _angle = 0;
+	
+	if (angle > 127) 
+	{
+		_angle = (256 - angle) * -1;
+		_sideways = 0;
+		_forward = 0;
+	}
+	else if (angle > 0)
+	{
+		_angle = angle;
+		_sideways = 0;
+		_forward = 0;
+	}
+	
+	if (_angle == 0)
+	{
+		while(currSteps < targetDistance)
+		{
+			if(abs(GYRO_PITCH) < GYRO_THRESHOLD)
+			{
+				if(GYRO_PITCH > 0)
+				{
+					drivetrain.strafe(0,-1,1);
+				}
+				else if (GYRO_PITCH < 0)
+				{
+					drivetrain.strafe(0,1,1);
+				}
+			}
+			else
+			{
+				drivetrain.strafe(_forward, _sideways, 1);
+				currSteps++;
+			}
 
+		}
+	}
+	else
+	{
+		while (abs(GYRO_PITCH - _angle) < GYRO_THRESHOLD)
+		{
+			if (_angle > 0)
+			{
+				drivetrain.step(-1, 1);
+			}
+			else if (_angle < 0)
+			{
+				drivetrain.step(1, -1);
+			}
+		}
+	}
+	
 	return true;
 }
-*/
+
 
 
 #endif
