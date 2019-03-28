@@ -185,9 +185,6 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	{
 		while(currSteps < targetDistance)
 		{
-
-			
-	
 			Vector norm = mpu.readNormalizeGyro();
 			float roll = roll + norm.XAxis * timeStep;
 			GYRO_ROLL = -roll;
@@ -199,16 +196,14 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 			}
 			else if(abs(GYRO_ROLL) > GYRO_THRESHOLD && currSteps % 1 == 0)
 			{
-				
 				if(GYRO_ROLL > 0)
 				{
-					drivetrain.step(-1,1);	
+					drivetrain.steppe(0,1);	
 				}
 				else //if (GYRO_ROLL < 0)
 				{
-					drivetrain.step(1,-1);	
+					drivetrain.steppe(1,0);	
 				}	
-
 			}
 			else
 			{
@@ -220,7 +215,7 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	}
 	else
 	{
-		while (abs(GYRO_ROLL - _angle) < GYRO_THRESHOLD)
+		while (abs(GYRO_ROLL - _angle) > GYRO_THRESHOLD)
 		{
 			Vector norm = mpu.readNormalizeGyro();
 			float roll = roll + norm.XAxis * timeStep;

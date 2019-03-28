@@ -186,6 +186,72 @@ void StepperMotorDrivetrain::step(int left, int right)
 	}
 }
 
+// A really cool function for allowing stepping with a single side for more "accurate" turning
+// Best to only use values: 	-1, 0, 1
+bool StepperMotorDrivetrain::steppe(int left, int right)
+{
+	bool millisecond_interval = false;
+	
+	//We basically force left and right to be equal here, because they should be.
+	//NO CURVE TURNS ALLOWED (Down with tank steer)
+	int steps = max(abs(left), abs(right));
+	
+	//int leftDirection = left < 0 ? -1 : 1;
+	//int rightDirection = right < 0 ? -1 : 1;
+	
+	int leftDirection = constrain(left, -1, 1);
+	int rightDirection = constrain(right, -1, 1);
+	
+	//Determine how many microseconds we want to wait, and convert to an integer
+	//double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
+	double T = calculateStepWait(steps);
+	
+	//Convert to milliseconds if delay would be greater than 5,000 us.
+	if(T > 5000)
+	{
+		T /= 1000;
+		millisecond_interval = true;
+	}
+	
+	unsigned long stepWait = static_cast<int>(T);
+	
+	for(int i = 0; i < steps; ++i)
+	{
+		this->frontLeftSteps += leftDirection;
+		this->backLeftSteps += leftDirection;
+		this->frontRightSteps += rightDirection;
+		this->backRightSteps += rightDirection;
+		
+		this->frontLeftCounter += leftDirection;
+		this->backLeftCounter += leftDirection;
+		this->frontRightCounter += rightDirection;
+		this->backRightCounter += rightDirection;
+		
+		//Constrain the counters to the step boundaries
+		//Left
+		this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
+		this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
+		
+		this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
+		this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
+		//Right
+		this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
+		this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
+		
+		this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
+		this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
+
+		if(millisecond_interval)
+		{
+			singleStep(stepWait);
+		}
+		else
+		{
+			singleStep_us(stepWait);
+		}
+	}
+}
+
 bool StepperMotorDrivetrain::stepToAngle(float target, float current)
 {
 	if (target > 0)
