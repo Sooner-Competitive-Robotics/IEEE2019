@@ -11,10 +11,10 @@ Arm::Arm()
 	
 }
 
-void Arm::begin(Servo& _fist, Servo& _wrist, Motor& _pinion, DigitalDevice& _lowSwitch, DigitalDevice& _highSwitch)
+void Arm::begin(int _fist, int _wrist, Motor& _pinion, DigitalDevice& _lowSwitch, DigitalDevice& _highSwitch)
 {
-	fist = _fist;
-	wrist = _wrist;
+	fist.attach(_fist);
+	wrist.attach(_wrist);
 	pinion = _pinion;
 	lowSwitch = _lowSwitch;
 	highSwitch = _highSwitch;

@@ -86,15 +86,15 @@ void armSetup()
 	DigitalDevice lowSwitch(LOW_SWITCH, INPUT);
 	DigitalDevice highSwitch(HIGH_SWITCH, INPUT);
 
-	fistServo.attach(FIST_PIN1);
-	wristServo.attach(WRIST_PIN1);
+	//fistServo.attach(FIST_PIN1);
+	//wristServo.attach(WRIST_PIN1);
 	
 	lowSwitch.pullUp();
 	highSwitch.pullUp();
 	
 	rackAndPinion.begin(ARM_MOT_PIN1, ARM_MOT_PIN2);
 	
-	arm.begin(fistServo, wristServo, rackAndPinion, lowSwitch, highSwitch);
+	arm.begin(FIST_PIN1, WRIST_PIN1, rackAndPinion, lowSwitch, highSwitch);
 	
 	//Serial.println("Initialize MPU6050");
 	//mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G);

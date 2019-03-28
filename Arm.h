@@ -17,7 +17,7 @@ class Arm
 	
 		Arm();
 
-		void begin(Servo& _fist, Servo& _wrist, Motor& _pinion, DigitalDevice& _lowSwitch, DigitalDevice& _highSwitch);
+		void begin(int _fist, int _wrist, Motor& _pinion, DigitalDevice& _lowSwitch, DigitalDevice& _highSwitch);
 	
 		void reset();
 		
