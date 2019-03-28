@@ -423,6 +423,29 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
     }
 }
 
+void StepperMotorDrivetrain::rest()
+{
+			digitalWrite(fRightIN1, LOW);
+			digitalWrite(fRightIN2, LOW);
+			digitalWrite(fRightIN3, LOW);
+			digitalWrite(fRightIN4, LOW);
+			
+			digitalWrite(bRightIN1, LOW);
+			digitalWrite(bRightIN2, LOW);
+			digitalWrite(bRightIN3, LOW);
+			digitalWrite(bRightIN4, LOW);
+			
+			digitalWrite(fLeftIN1, LOW);
+			digitalWrite(fLeftIN2, LOW);
+			digitalWrite(fLeftIN3, LOW);
+			digitalWrite(fLeftIN4, LOW);
+			
+			digitalWrite(bLeftIN1, LOW);
+			digitalWrite(bLeftIN2, LOW);
+			digitalWrite(bLeftIN3, LOW);
+			digitalWrite(bLeftIN4, LOW);
+}
+
 /* Pass ints for direction
  * 
  * forwardDirection: 0-->None	1-->Forward		-1-->Backwards
