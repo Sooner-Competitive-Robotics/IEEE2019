@@ -132,6 +132,10 @@ void StepperMotorDrivetrain::step(int left, int right)
 	int leftDirection = left < 0 ? -1 : 1;
 	int rightDirection = right < 0 ? -1 : 1;
 	
+	//if (left = 0) leftDirection = 0;
+	//if (right = 0) rightDirection = 0;
+
+	
 	//Determine how many microseconds we want to wait, and convert to an integer
 	//double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
 	double T = calculateStepWait(steps);
