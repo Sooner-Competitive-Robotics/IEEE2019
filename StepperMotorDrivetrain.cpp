@@ -502,11 +502,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			
 			for(int i = 0; i < steps; i++)
 			{
-				//right motors turn inward, left motors turn outward				
-				backRightCounter += 1;
-				frontRightCounter -= 1;
-				backLeftCounter -= 1;
-				frontLeftCounter += 1;
+				//right motors turn outward, left motors turn inward
+				backRightCounter -= 1;
+				frontRightCounter += 1;
+				backLeftCounter += 1;
+				frontLeftCounter -= 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
@@ -540,11 +540,11 @@ void StepperMotorDrivetrain::strafe(int forwardDirection, int sidewayDirection, 
 			
 			for(int i = 0; i < steps; i++)
 			{
-				//right motors turn outward, left motors turn inward
-				backRightCounter -= 1;
-				frontRightCounter += 1;
-				backLeftCounter += 1;
-				frontLeftCounter -= 1;
+				//right motors turn inward, left motors turn outward				
+				backRightCounter += 1;
+				frontRightCounter -= 1;
+				backLeftCounter -= 1;
+				frontLeftCounter += 1;
 				
 				//Constrain the counters to the step boundaries
 				//Left
