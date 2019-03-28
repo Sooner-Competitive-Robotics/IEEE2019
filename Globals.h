@@ -32,11 +32,11 @@ float GYRO_YAW;
 #define ARM_MOT_PIN1 6
 #define ARM_MOT_PIN2 7
 
-#define WRIST_PIN1 4
+#define WRIST_PIN1 5
 
-#define FIST_PIN1 5
+#define FIST_PIN1 4
 
-#define LOW_SWITCH 8
-#define HIGH_SWITCH 9
+#define LOW_SWITCH 9
+#define HIGH_SWITCH 8
 
 #endif

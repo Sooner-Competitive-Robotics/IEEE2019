@@ -43,7 +43,9 @@ void Arm::moveWrist(int angle)
 {
 	wrist.write(angle);
 	wristAngle += angle;
+	Serial.println("moving");
 }
+
 
 /*	
  *	Returns -1 or 1 for switch is retracted or extended respectively OR 0 when in between (moving)
