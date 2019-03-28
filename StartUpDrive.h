@@ -206,7 +206,7 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 				}
 				else if (GYRO_ROLL < 0)
 				{
-					drivetrain.strafe(1,-1);
+					drivetrain.step(1,-1);
 				}
 			}
 			else
