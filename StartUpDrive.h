@@ -197,7 +197,7 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 				drivetrain.strafe(_forward, _sideways, 1);
 				currSteps++;
 			}
-			else if(abs(GYRO_ROLL) < GYRO_THRESHOLD || currSteps % 10 == 0)
+			else if(abs(GYRO_ROLL) < GYRO_THRESHOLD && currSteps % 10 == 0)
 			{
 				if(GYRO_ROLL > 0)
 				{
