@@ -56,15 +56,16 @@ void checkSettings()
 
 void updateGyro()
 {
+	/*
 	float timeStep = 0.01;
 	
 	// Read normalized values
 	Vector norm = mpu.readNormalizeGyro();
 
 	// Calculate Pitch, Roll and Yaw
-	float pitch = pitch + norm.YAxis * timeStep;
-	float roll = roll + norm.XAxis * timeStep;
-	float yaw = yaw + norm.ZAxis * timeStep;
+	pitch = pitch + norm.YAxis * timeStep;
+	roll = roll + norm.XAxis * timeStep;
+	yaw = yaw + norm.ZAxis * timeStep;
 
 	// Output raw
 	Serial.print(" Pitch = ");
@@ -77,6 +78,7 @@ void updateGyro()
 	GYRO_PITCH = pitch;
 	GYRO_YAW = yaw;
 	GYRO_ROLL = -roll;
+	*/
 }
 
 void driveSetup()
@@ -112,7 +114,7 @@ void driveSetup()
 	drivetrain.initBackRight(BACK_RIGHT_MOT_PIN1, BACK_RIGHT_MOT_PIN2, BACK_RIGHT_MOT_PIN3, BACK_RIGHT_MOT_PIN4);
 	drivetrain.setRPM(25);
 
-	attachInterrupt(digitalPinToInterrupt(2), updateGyro, CHANGE);
+	//attachInterrupt(digitalPinToInterrupt(2), updateGyro, CHANGE);
 
 	// If you want, you can set gyroscope offsets
 	// mpu.setGyroOffsetX(155);
@@ -136,7 +138,11 @@ void driveSetup()
 
 bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 {
-	
+	float timeStep = 0.01;
+	float roll = 0;
+	float pitch = 0;
+	float yaw = 0;
+
 	int currSteps = 0;
 	
 	int _forward = 0;
@@ -180,6 +186,10 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	{
 		while(currSteps < targetDistance)
 		{
+			Vector norm = mpu.readNormalizeGyro();
+			float roll = roll + norm.XAxis * timeStep;
+			GYRO_ROLL = -roll;
+			
 			if(abs(GYRO_ROLL) < GYRO_THRESHOLD)
 			{
 				if(GYRO_ROLL > 0)
@@ -203,6 +213,10 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	{
 		while (abs(GYRO_ROLL - _angle) < GYRO_THRESHOLD)
 		{
+			Vector norm = mpu.readNormalizeGyro();
+			float roll = roll + norm.XAxis * timeStep;
+			GYRO_ROLL = -roll;
+			
 			if (_angle > 0)
 			{
 				drivetrain.step(-1, 1);
