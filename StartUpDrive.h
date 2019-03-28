@@ -56,6 +56,8 @@ void checkSettings()
 
 void updateGyro()
 {
+	float timeStep = 0.01;
+	
 	// Read normalized values
 	Vector norm = mpu.readNormalizeGyro();
 
@@ -139,6 +141,8 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	
 	int _forward = 0;
 	
+	int _angle = 0;
+
 	if (forward > 127) 
 	{
 		_forward = -1;
@@ -158,8 +162,6 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 	{
 		_sideways = 1;
 	}
-	
-	int _angle = 0;
 	
 	if (angle > 127) 
 	{
