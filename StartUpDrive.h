@@ -16,6 +16,8 @@ MPU6050 mpu;
 const int MPU_addr = 0x68;  // I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
+float roll = 0;
+
 void checkSettings()
 {
 	Serial.println();
@@ -186,7 +188,7 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 		while(currSteps < targetDistance)
 		{
 			Vector norm = mpu.readNormalizeGyro();
-			float roll = roll + norm.XAxis * timeStep;
+			roll = roll + norm.XAxis * timeStep;
 			GYRO_ROLL = -roll;
 			
 			if (currSteps < 50)
@@ -218,7 +220,7 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 		while (abs(GYRO_ROLL - _angle) > GYRO_THRESHOLD)
 		{
 			Vector norm = mpu.readNormalizeGyro();
-			float roll = roll + norm.XAxis * timeStep;
+			roll = roll + norm.XAxis * timeStep;
 			GYRO_ROLL = -roll;
 
 			Serial.println(GYRO_ROLL);
