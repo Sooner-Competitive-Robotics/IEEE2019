@@ -225,11 +225,11 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 			
 			if (_angle > 0)
 			{
-				drivetrain.steppe(0, 1);
+				drivetrain.steppe(1, -1);
 			}
 			else if (_angle < 0)
 			{
-				drivetrain.steppe(1, 0);
+				drivetrain.steppe(-1, 1);
 			}
 		}
 	}
