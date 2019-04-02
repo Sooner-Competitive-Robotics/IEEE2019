@@ -220,18 +220,22 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 			Vector norm = mpu.readNormalizeGyro();
 			float roll = roll + norm.XAxis * timeStep;
 			GYRO_ROLL = -roll;
+
+			Serial.println(GYRO_ROLL);
 			
 			if (_angle > 0)
 			{
-				drivetrain.step(-1, 1);
+				drivetrain.steppe(0, 1);
 			}
 			else if (_angle < 0)
 			{
-				drivetrain.step(1, -1);
+				drivetrain.steppe(1, 0);
 			}
 		}
 	}
 	
+	Serial.println("DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 	return true;
 }
 
