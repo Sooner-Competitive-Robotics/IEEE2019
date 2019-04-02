@@ -747,3 +747,10 @@ void MPU6050::writeRegisterBit(uint8_t reg, uint8_t pos, bool state)
 
     writeRegister8(reg, value);
 }
+
+void MPU6050::resetValue()
+{
+	tg.XAxis = 0;
+    tg.YAxis = 0;
+    tg.ZAxis = 0;
+}

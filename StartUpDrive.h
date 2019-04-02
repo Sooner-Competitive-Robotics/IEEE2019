@@ -16,8 +16,6 @@ MPU6050 mpu;
 const int MPU_addr = 0x68;  // I2C address of the MPU-6050
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
-float roll = 0;
-
 void checkSettings()
 {
 	Serial.println();
@@ -137,7 +135,7 @@ void driveSetup()
 }
 
 
-bool smartDrive(int forward, int sideways, int targetDistance, int angle)
+void smartDrive(int forward, int sideways, int targetDistance, int angle)
 {
 	float timeStep = 0.01;
 	float roll = 0;
@@ -228,19 +226,20 @@ bool smartDrive(int forward, int sideways, int targetDistance, int angle)
 			if (_angle > 0)
 			{
 				drivetrain.steppe(1, -1);
-				delay(10);
+				//delay(10);
 			}
 			else if (_angle < 0)
 			{
 				drivetrain.steppe(-1, 1);
-				delay(10);
+				//delay(10);
 			}
 		}
 	}
 	
+	GYRO_ROLL = 0;
+	
 	Serial.println("DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-	return true;
 }
 
 
