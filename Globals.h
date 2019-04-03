@@ -23,7 +23,7 @@
 #define BACK_RIGHT_MOT_PIN3 8//A2
 #define BACK_RIGHT_MOT_PIN4 9//A3
 
-#define GYRO_THRESHOLD 1
+#define GYRO_THRESHOLD 1.5
 
 float GYRO_PITCH;
 float GYRO_ROLL;
