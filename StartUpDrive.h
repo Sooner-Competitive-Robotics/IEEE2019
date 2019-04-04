@@ -241,11 +241,9 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 				//delay(10);
 			}
 			
-			drivetrain.steppe(0, 0);
 			//delay((timeStep*1000) - (millis() - timer));
 		}
 		
-		drivetrain.steppe(0, 0);
 		//delay((timeStep*1000) - (millis() - timer));
 	}
 	
