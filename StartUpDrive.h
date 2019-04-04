@@ -219,7 +219,7 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 		//timer = millis();
 
 		//while (abs(GYRO_ROLL - _angle) > GYRO_THRESHOLD)
-		while (abs(GYRO_ROLL) < abs(_angle))
+		while (abs(GYRO_ROLL) < abs(_angle) && abs(GYRO_ROLL - _angle) > GYRO_THRESHOLD)
 		{
 			//drivetrain.steppe(0, 0);
 			//delay(10);
