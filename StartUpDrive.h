@@ -149,7 +149,6 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 	
 	int _angle = 0;
 	
-	bool front = false;
 	
 	
 
@@ -205,29 +204,11 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 			{
 				if(GYRO_ROLL > 0)
 				{
-					if(front)  // the FRONT variable is to account for corrections that shift the robot forward and backward as to not have
-					{
-						drivetrain.steppe(0,1);
-						front = !front;
-					}
-					else
-					{
-						drivetrain.steppe(-1,0);
-						front = !front;
-					}
+					drivetrain.steppe(0,1);
 				}
 				else //if (GYRO_ROLL < 0)
 				{
-					if(front)
-					{
-						drivetrain.steppe(1,0);	
-						front = !front;
-					}
-					else
-					{
-						drivetrain.steppe(0,-1);
-						front = !front;
-					}
+					drivetrain.steppe(1,0);	
 				}	
 			}
 			else
