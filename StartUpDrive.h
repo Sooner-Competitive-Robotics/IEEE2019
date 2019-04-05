@@ -148,6 +148,8 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 	int _forward = 0;
 	
 	int _angle = 0;
+	
+	
 
 	if (forward > 127) 
 	{
@@ -190,12 +192,14 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 			roll = roll + norm.XAxis * timeStep;
 			GYRO_ROLL = -roll;
 			
+			/**  CHANGED to adjust every 50 steps aka 1 inch roughly. May change threshold.
 			if (currSteps < 50)
 			{
 				drivetrain.strafe(_forward, _sideways, 1);
 				currSteps++;
 			}
-			else if(abs(GYRO_ROLL) > GYRO_THRESHOLD && currSteps % 1 == 0)
+			*/
+			if(abs(GYRO_ROLL) > GYRO_THRESHOLD && currSteps % 50 == 0)
 			{
 				if(GYRO_ROLL > 0)
 				{
