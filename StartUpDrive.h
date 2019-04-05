@@ -200,7 +200,7 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 				currSteps++;
 			}
 			*/
-			if(abs(GYRO_ROLL) > GYRO_THRESHOLD && currSteps % 50 == 0 && currSteps != 0) // makes sure no weird correction at beginning
+			if(abs(GYRO_ROLL) > GYRO_THRESHOLD && currSteps % 20 == 0 && currSteps != 0) // makes sure no weird correction at beginning
 			{
 				if(GYRO_ROLL > 0)
 				{
