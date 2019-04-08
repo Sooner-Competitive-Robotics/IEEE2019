@@ -58,7 +58,7 @@ void updateGyro()
 {
 	/*
 	float timeStep = 0.01;
-	
+
 	// Read normalized values
 	Vector norm = mpu.readNormalizeGyro();
 
@@ -71,7 +71,7 @@ void updateGyro()
 	Serial.print(" Pitch = ");
 	Serial.print(pitch);
 	Serial.print(" Roll = ");
-	Serial.print(roll);  
+	Serial.print(roll);
 	Serial.print(" Yaw = ");
 	Serial.println(yaw);
 
@@ -138,41 +138,41 @@ void driveSetup()
 void smartDrive(int forward, int sideways, int targetDistance, int angle)
 {
 	//unsigned long timer = 0;
-	float timeStep = 0.001;
+	float iTime = micros();
+	float fTime = micros();
+	float timeStep = 0;
 	float roll = 0;
-	float pitch = 0;
-	float yaw = 0;
-
+	
 	int currSteps = 0;
-	
-	int _forward = 0;
-	
-	int _angle = 0;
-	
-	
-	
 
-	if (forward > 127) 
+	int _forward = 0;
+
+	int _angle = 0;
+
+
+
+
+	if (forward > 127)
 	{
 		_forward = -1;
 	}
-	else if (forward > 0) 
+	else if (forward > 0)
 	{
 		_forward = 1;
 	}
-	
+
 	int _sideways = 0;
-	
+
 	if (sideways > 127)
 	{
 		_sideways = -1;
 	}
-	else if (sideways > 0) 
+	else if (sideways > 0)
 	{
 		_sideways = 1;
 	}
-	
-	if (angle > 127) 
+
+	if (angle > 127)
 	{
 		_angle = (256 - angle) * -1;
 		_sideways = 0;
@@ -184,15 +184,26 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 		_sideways = 0;
 		_forward = 0;
 	}
-	
+
 	if (_angle == 0)
 	{
 		while(currSteps < targetDistance)
 		{
+			iTime = fTime;
+			fTime = micros();
+			timeStep = fTime - iTime;
 			Vector norm = mpu.readNormalizeGyro();
-			roll = roll + norm.XAxis * timeStep;
+			roll = roll + norm.XAxis * timeStep/1000000;
 			GYRO_ROLL = -roll;
 			
+		    Serial.println(GYRO_ROLL);
+
+			if(norm.XAxis < .5)
+			{
+				norm.XAxis = 0;
+			}
+
+
 			/**  CHANGED to adjust every 50 steps aka 1 inch roughly. May change threshold.
 			if (currSteps < 50)
 			{
@@ -208,8 +219,8 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 				}
 				else //if (GYRO_ROLL < 0)
 				{
-					drivetrain.steppe(1,0);	
-				}	
+					drivetrain.steppe(1,0);
+				}
 			}
 			else
 			{
@@ -228,13 +239,15 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 		{
 			//drivetrain.steppe(0, 0);
 			//delay(10);
-					
+            iTime = fTime;
+			fTime = micros();
+			timeStep = fTime - iTime;
 			Vector norm = mpu.readNormalizeGyro();
-			roll = roll + norm.XAxis * timeStep;
+			roll = roll + norm.XAxis * timeStep/1000000;
 			GYRO_ROLL = -roll;
 
 			Serial.println(GYRO_ROLL);
-			
+
 			if (_angle > 0)
 			{
 				drivetrain.steppe(1, -1);
@@ -245,15 +258,15 @@ void smartDrive(int forward, int sideways, int targetDistance, int angle)
 				drivetrain.steppe(-1, 1);
 				//delay(10);
 			}
-			
+
 			//delay((timeStep*1000) - (millis() - timer));
 		}
-		
+
 		//delay((timeStep*1000) - (millis() - timer));
 	}
-	
+
 	GYRO_ROLL = 0;
-	
+
 	Serial.println("DONE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 }
