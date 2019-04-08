@@ -1,7 +1,9 @@
 #include "StepperMotorDrivetrain.h"
 #include <String.h>
 
-//constructor
+const double WHEEL_DIAMETER = 4;  
+
+// Constructor
 StepperMotorDrivetrain::StepperMotorDrivetrain()
 {
 	//sets steps and step counter to 0
@@ -21,9 +23,10 @@ StepperMotorDrivetrain::StepperMotorDrivetrain()
 	this->rpm = 25;
 }
 
+// Set a drivetrain's pins equal to another
 void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 {
-	//sets private variables from each drivetrain equal to one other
+	// Sets private variables from each drivetrain equal to one other
 	this->fLeftIN1 = drivetrain.fLeftIN1;
 	this->fLeftIN2 = drivetrain.fLeftIN2;
 	this->fLeftIN3 = drivetrain.fLeftIN3;
@@ -44,6 +47,7 @@ void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 	this->bRightIN3 = drivetrain.bRightIN3;
 	this->bRightIN4 = drivetrain.bRightIN4;
 	
+	// Copy the rpm from previous drivetrain
 	this->rpm = drivetrain.rpm;
 	
 	this->frontLeftSteps = drivetrain.frontLeftSteps;
@@ -57,7 +61,7 @@ void StepperMotorDrivetrain::operator=(const StepperMotorDrivetrain& drivetrain)
 	this->backRightCounter = drivetrain.backRightCounter;
 }
 
-//sets pins for front left motors
+// Sets pins for front left motors
 void StepperMotorDrivetrain::initFrontLeft(int in1, int in2, int in3, int in4)
 {
 	this->fLeftIN1 = in1;
@@ -71,7 +75,7 @@ void StepperMotorDrivetrain::initFrontLeft(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
-//sets pins for back left motors
+// Sets pins for back left motors
 void StepperMotorDrivetrain::initBackLeft(int in1, int in2, int in3, int in4)
 {
 	this->bLeftIN1 = in1;
@@ -85,7 +89,7 @@ void StepperMotorDrivetrain::initBackLeft(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
-//sets pins for front right motors
+// Sets pins for front right motors
 void StepperMotorDrivetrain::initFrontRight(int in1, int in2, int in3, int in4)
 {
 	this->fRightIN1 = in1;
@@ -99,7 +103,7 @@ void StepperMotorDrivetrain::initFrontRight(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
-//sets pins for back right motors
+// Sets pins for back right motors
 void StepperMotorDrivetrain::initBackRight(int in1, int in2, int in3, int in4)
 {
 	this->bRightIN1 = in1;
@@ -113,42 +117,37 @@ void StepperMotorDrivetrain::initBackRight(int in1, int in2, int in3, int in4)
 	pinMode(in4, OUTPUT);
 }
 
-//sets speed of drivetrain
+// Sets speed of drivetrain
 void StepperMotorDrivetrain::setRPM(float speed)
 {
 	this->rpm = abs(speed);
 }
 
-//moves the drivetrain
+// Moves the drivetrain
 void StepperMotorDrivetrain::step(int left, int right)
 {
 	bool millisecond_interval = false;
 	
-	//We basically force left and right to be equal here, because they should be.
-	//NO CURVE TURNS ALLOWED (Down with tank steer)
+	// We basically force left and right to be equal here, because they should be.
+	// NO CURVE TURNS ALLOWED (Down with tank steer)
 	int steps = min(abs(left), abs(right));
 	
-	
+	// If direction param is negative then set its direction to -1, otherwise 1.
 	int leftDirection = left < 0 ? -1 : 1;
 	int rightDirection = right < 0 ? -1 : 1;
 	
-	//if (left = 0) leftDirection = 0;
-	//if (right = 0) rightDirection = 0;
-
-	
-	//Determine how many microseconds we want to wait, and convert to an integer
-	//double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
+	// Determine how many microseconds we want to wait, and convert to an integer
 	double T = calculateStepWait(steps);
 	
-	//Convert to milliseconds if delay would be greater than 5,000 us.
+	// Convert to milliseconds if delay would be greater than 5,000 us.
 	if(T > 5000)
 	{
 		T /= 1000;
 		millisecond_interval = true;
 	}
-	
 	unsigned long stepWait = static_cast<int>(T);
 	
+	// Step steps number of times
 	for(int i = 0; i < steps; ++i)
 	{
 		this->frontLeftSteps += leftDirection;
@@ -161,20 +160,21 @@ void StepperMotorDrivetrain::step(int left, int right)
 		this->frontRightCounter += rightDirection;
 		this->backRightCounter += rightDirection;
 		
-		//Constrain the counters to the step boundaries
-		//Left
+		// Constrain the counters to the step boundaries
+		// Left
 		this->frontLeftCounter = this->frontLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontLeftCounter;
 		this->frontLeftCounter = this->frontLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontLeftCounter;
 		
 		this->backLeftCounter = this->backLeftCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backLeftCounter;
 		this->backLeftCounter = this->backLeftCounter >= STEPS_PER_REVOLUTION ? 0 : this->backLeftCounter;
-		//Right
+		// Right
 		this->frontRightCounter = this->frontRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->frontRightCounter;
 		this->frontRightCounter = this->frontRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->frontRightCounter;
 		
 		this->backRightCounter = this->backRightCounter < 0 ? STEPS_PER_REVOLUTION - 1 : this->backRightCounter;
 		this->backRightCounter = this->backRightCounter >= STEPS_PER_REVOLUTION ? 0 : this->backRightCounter;
 
+		// Step according to interval
 		if(millisecond_interval)
 		{
 			singleStep(stepWait);
@@ -254,6 +254,7 @@ bool StepperMotorDrivetrain::steppe(int left, int right)
 
 bool StepperMotorDrivetrain::stepToAngle(float target, float current)
 {
+	// Turn right
 	if (target > 0)
 	{
 		if (inRange(target, current, ANGLETHRESHOLD))
@@ -276,6 +277,7 @@ bool StepperMotorDrivetrain::stepToAngle(float target, float current)
 		}
 
 	}
+	// Turn left
 	else //(target < 0)
 	{
 		if (inRange(target, current, ANGLETHRESHOLD))
@@ -299,18 +301,18 @@ bool StepperMotorDrivetrain::stepToAngle(float target, float current)
 	}
 }
 
-//calculate the amount of time the amount of steps will take
+// Calculate the amount of time the amount of steps will take
 // Returns time in microseconds
 double StepperMotorDrivetrain::calculateStepWait(int steps) {
 
-	//Determine how many microseconds we want to wait, and convert to an integer	
+	// Determine how many microseconds we want to wait, and convert to an integer	
 	double totalTime = (static_cast<double>(steps) / STEPS_PER_REVOLUTION) / this->rpm * 60.0 * 1000.0 * 1000.0;
 	double T = (totalTime / steps) / 2;
 	
 	return T;
 }
 
-//resets the step counters to 0
+// Resets the step counters to 0
 void StepperMotorDrivetrain::resetStepCounter()
 {
 	frontLeftSteps = 0;
@@ -319,38 +321,38 @@ void StepperMotorDrivetrain::resetStepCounter()
 	backRightSteps = 0;
 }
 
-//getter method for left motor steps
+// Getter method for left motor steps
 long StepperMotorDrivetrain::getFrontLeftSteps()
 {
 	return this->frontLeftCounter;
 }
 
-//getter method for left motor steps
+// Getter method for left motor steps
 long StepperMotorDrivetrain::getBackLeftSteps()
 {
 	return this->backLeftCounter;
 }
 
-//getter method for right motor steps
+// Getter method for right motor steps
 long StepperMotorDrivetrain::getFrontRightSteps()
 {
 	return this->frontRightCounter;
 }
 
-//getter method for right motor steps
+// Getter method for right motor steps
 long StepperMotorDrivetrain::getBackRightSteps()
 {
 	return this->backRightCounter;
 }
 
-//helper method to convert inches to steps
+// Helper method to convert inches to steps
 int StepperMotorDrivetrain::convertInchesToSteps(float inches)
 {
-	//number of steps / circumference of wheel = ratio
-	return static_cast<int>((STEPS_PER_REVOLUTION/(4.0*3.141592653589))*inches * 1.04);
+	// number of steps / circumference of wheel = ratio
+	return static_cast<int>((STEPS_PER_REVOLUTION/(WHEEL_DIAMETER*3.141592653589))*inches * 1.04);
 }
 
-//Private Functions
+// Private Functions
 void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
 {
 	sendStepSignalToFrontLeft(frontLeftCounter % 8);
@@ -361,7 +363,7 @@ void StepperMotorDrivetrain::singleStep(unsigned int stepWait)
 	delay(stepWait); // Wait
 }
 
-//same as above but with a different delay function
+// same as above but with a different delay function
 void StepperMotorDrivetrain::singleStep_us(unsigned int stepWait)
 {
 
@@ -590,6 +592,7 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
     }
 }
 
+// Sets all stepper motors to LOW. Allows power saving and reduces heat.
 void StepperMotorDrivetrain::rest()
 {
 			digitalWrite(fRightIN1, LOW);
