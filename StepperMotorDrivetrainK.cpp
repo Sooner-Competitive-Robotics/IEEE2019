@@ -1,7 +1,7 @@
 #include "StepperMotorDrivetrain.h"
 #include <String.h>
 
-const double WHEEL_DIAMETER = 4;  
+const double WHEEL_DIAMETER = 4;
 
 // Constructor
 StepperMotorDrivetrain::StepperMotorDrivetrain()
@@ -595,6 +595,14 @@ void StepperMotorDrivetrain::sendStepSignalToBackRight(int stepID)
 // Sets all stepper motors to LOW. Allows power saving and reduces heat.
 void StepperMotorDrivetrain::rest()
 {
+		if(millisecond_interval)
+		{
+			delay(5*waitTime); // gives some time for momentum to be dampened.
+		}
+		else
+		{
+			delayMicroseconds(5*waitTime);
+		}			
 			digitalWrite(fRightIN1, LOW);
 			digitalWrite(fRightIN2, LOW);
 			digitalWrite(fRightIN3, LOW);
